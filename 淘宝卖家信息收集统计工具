@@ -2,6 +2,9 @@
 
 1. 卖家已卖出的交易数据统计（最好是实时）
 2. 买家退货的交易数据统计
+ 查询买家申请的退款列表（收费）： http://open.taobao.com/doc2/apiDetail.htm?spm=a219a.7629065.0.0.yeanOU&apiId=51
+ 单笔退款详情（收费）：http://open.taobao.com/doc2/apiDetail.htm?spm=a219a.7629065.0.0.yeanOU&apiId=53
+ 退款API总览：http://open.taobao.com/doc2/apiList.htm?spm=a219a.7629065.0.0.pJwVml&cid=10125
 3. 卖家的刷单交易数据统计
 
 二、线下部分
