@@ -33,4 +33,14 @@ public class Alphanumeric {
 		}
 		return bytes;
 	}
+	
+	public static byte[] convert(int number, int length) {
+		byte[] bytes = new byte[length];
+		int p = length - 1;
+		while (number > 0) {
+			bytes[p --] = (byte) (number % 2);
+			number = number >> 1;
+		}
+		return bytes;
+	}
 }
