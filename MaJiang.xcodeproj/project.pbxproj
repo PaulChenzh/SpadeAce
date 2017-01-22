@@ -15,6 +15,18 @@
 		92088C971E2D0CFF0032DE24 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92088C951E2D0CFF0032DE24 /* LaunchScreen.storyboard */; };
 		92088CA21E2D0CFF0032DE24 /* MaJiangTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 92088CA11E2D0CFF0032DE24 /* MaJiangTests.m */; };
 		92088CAD1E2D0CFF0032DE24 /* MaJiangUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 92088CAC1E2D0CFF0032DE24 /* MaJiangUITests.m */; };
+		925394D71E34B22A00CC983B /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394D21E34B22A00CC983B /* libWeChatSDK.a */; };
+		925394D81E34B22A00CC983B /* README.txt in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394D31E34B22A00CC983B /* README.txt */; };
+		925394D91E34B22A00CC983B /* WechatAuthSDK.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394D41E34B22A00CC983B /* WechatAuthSDK.h */; };
+		925394DA1E34B22A00CC983B /* WXApi.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394D51E34B22A00CC983B /* WXApi.h */; };
+		925394DB1E34B22A00CC983B /* WXApiObject.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394D61E34B22A00CC983B /* WXApiObject.h */; };
+		925394DF1E34B23300CC983B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394DC1E34B23300CC983B /* CoreTelephony.framework */; };
+		925394E01E34B23300CC983B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394DD1E34B23300CC983B /* SystemConfiguration.framework */; };
+		925394E51E34B24300CC983B /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394E21E34B24300CC983B /* libc++.dylib */; };
+		925394E61E34B24300CC983B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394E31E34B24300CC983B /* libsqlite3.dylib */; };
+		925394E71E34B24300CC983B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 925394E41E34B24300CC983B /* libz.dylib */; };
+		925394E91E34B34800CC983B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 925394E81E34B34800CC983B /* Images.xcassets */; };
+		925394EB1E34B36500CC983B /* MaJiang Launch Image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 925394EA1E34B36500CC983B /* MaJiang Launch Image.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +63,19 @@
 		92088CA81E2D0CFF0032DE24 /* MaJiangUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MaJiangUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92088CAC1E2D0CFF0032DE24 /* MaJiangUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MaJiangUITests.m; sourceTree = "<group>"; };
 		92088CAE1E2D0CFF0032DE24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		925394D21E34B22A00CC983B /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = "../../Documents/黑桃泉州麻将/OpenSDK1.7.5/libWeChatSDK.a"; sourceTree = "<group>"; };
+		925394D31E34B22A00CC983B /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.txt; path = "../../Documents/黑桃泉州麻将/OpenSDK1.7.5/README.txt"; sourceTree = "<group>"; };
+		925394D41E34B22A00CC983B /* WechatAuthSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WechatAuthSDK.h; path = "../../Documents/黑桃泉州麻将/OpenSDK1.7.5/WechatAuthSDK.h"; sourceTree = "<group>"; };
+		925394D51E34B22A00CC983B /* WXApi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WXApi.h; path = "../../Documents/黑桃泉州麻将/OpenSDK1.7.5/WXApi.h"; sourceTree = "<group>"; };
+		925394D61E34B22A00CC983B /* WXApiObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WXApiObject.h; path = "../../Documents/黑桃泉州麻将/OpenSDK1.7.5/WXApiObject.h"; sourceTree = "<group>"; };
+		925394DC1E34B23300CC983B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = "../../Documents/黑桃泉州麻将/useful framework/CoreTelephony.framework"; sourceTree = "<group>"; };
+		925394DD1E34B23300CC983B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = "../../Documents/黑桃泉州麻将/useful framework/SystemConfiguration.framework"; sourceTree = "<group>"; };
+		925394DE1E34B23300CC983B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = "../../Documents/黑桃泉州麻将/useful framework/UIKit.framework"; sourceTree = "<group>"; };
+		925394E21E34B24300CC983B /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "../../Documents/黑桃泉州麻将/libc/libc++.dylib"; sourceTree = "<group>"; };
+		925394E31E34B24300CC983B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = "../../Documents/黑桃泉州麻将/libc/libsqlite3.dylib"; sourceTree = "<group>"; };
+		925394E41E34B24300CC983B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = "../../Documents/黑桃泉州麻将/libc/libz.dylib"; sourceTree = "<group>"; };
+		925394E81E34B34800CC983B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		925394EA1E34B36500CC983B /* MaJiang Launch Image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "MaJiang Launch Image.jpg"; path = "../../Documents/黑桃泉州麻将/Image/MaJiang Launch Image.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +83,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				925394E51E34B24300CC983B /* libc++.dylib in Frameworks */,
+				925394E61E34B24300CC983B /* libsqlite3.dylib in Frameworks */,
+				925394E71E34B24300CC983B /* libz.dylib in Frameworks */,
+				925394DF1E34B23300CC983B /* CoreTelephony.framework in Frameworks */,
+				925394E01E34B23300CC983B /* SystemConfiguration.framework in Frameworks */,
+				925394D71E34B22A00CC983B /* libWeChatSDK.a in Frameworks */,
+				925394D81E34B22A00CC983B /* README.txt in Frameworks */,
+				925394D91E34B22A00CC983B /* WechatAuthSDK.h in Frameworks */,
+				925394DA1E34B22A00CC983B /* WXApi.h in Frameworks */,
+				925394DB1E34B22A00CC983B /* WXApiObject.h in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +116,9 @@
 		92088C7B1E2D0CFF0032DE24 = {
 			isa = PBXGroup;
 			children = (
+				925394ED1E34B41F00CC983B /* Images */,
+				925394EC1E34B40200CC983B /* WeChatLogin */,
+				925394E81E34B34800CC983B /* Images.xcassets */,
 				92088C861E2D0CFF0032DE24 /* MaJiang */,
 				92088CA01E2D0CFF0032DE24 /* MaJiangTests */,
 				92088CAB1E2D0CFF0032DE24 /* MaJiangUITests */,
@@ -138,6 +176,32 @@
 				92088CAE1E2D0CFF0032DE24 /* Info.plist */,
 			);
 			path = MaJiangUITests;
+			sourceTree = "<group>";
+		};
+		925394EC1E34B40200CC983B /* WeChatLogin */ = {
+			isa = PBXGroup;
+			children = (
+				925394E21E34B24300CC983B /* libc++.dylib */,
+				925394E31E34B24300CC983B /* libsqlite3.dylib */,
+				925394E41E34B24300CC983B /* libz.dylib */,
+				925394DC1E34B23300CC983B /* CoreTelephony.framework */,
+				925394DD1E34B23300CC983B /* SystemConfiguration.framework */,
+				925394DE1E34B23300CC983B /* UIKit.framework */,
+				925394D21E34B22A00CC983B /* libWeChatSDK.a */,
+				925394D31E34B22A00CC983B /* README.txt */,
+				925394D41E34B22A00CC983B /* WechatAuthSDK.h */,
+				925394D51E34B22A00CC983B /* WXApi.h */,
+				925394D61E34B22A00CC983B /* WXApiObject.h */,
+			);
+			name = WeChatLogin;
+			sourceTree = "<group>";
+		};
+		925394ED1E34B41F00CC983B /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				925394EA1E34B36500CC983B /* MaJiang Launch Image.jpg */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,7 +308,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				92088C971E2D0CFF0032DE24 /* LaunchScreen.storyboard in Resources */,
+				925394E91E34B34800CC983B /* Images.xcassets in Resources */,
 				92088C941E2D0CFF0032DE24 /* Assets.xcassets in Resources */,
+				925394EB1E34B36500CC983B /* MaJiang Launch Image.jpg in Resources */,
 				92088C921E2D0CFF0032DE24 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,6 +481,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MaJiang/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "/Users/SpadeAce/Documents/黑桃泉州麻将/OpenSDK1.7.5";
 				PRODUCT_BUNDLE_IDENTIFIER = spade.MaJiang;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -426,6 +493,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MaJiang/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "/Users/SpadeAce/Documents/黑桃泉州麻将/OpenSDK1.7.5";
 				PRODUCT_BUNDLE_IDENTIFIER = spade.MaJiang;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -498,6 +566,7 @@
 				92088CB31E2D0CFF0032DE24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		92088CB41E2D0CFF0032DE24 /* Build configuration list for PBXNativeTarget "MaJiangTests" */ = {
 			isa = XCConfigurationList;
@@ -506,6 +575,7 @@
 				92088CB61E2D0CFF0032DE24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		92088CB71E2D0CFF0032DE24 /* Build configuration list for PBXNativeTarget "MaJiangUITests" */ = {
 			isa = XCConfigurationList;
@@ -514,6 +584,7 @@
 				92088CB91E2D0CFF0032DE24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
