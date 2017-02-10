@@ -1,2 +1,3 @@
 https://docs.unity3d.com/Manual/index.html unity圣经
 https://unity3d.com/learn/tutorials unity官网，可以学习视频
+http://www.cnblogs.com/neverdie/p/How_To_Learn_Unity3D.html 一篇非常好的unity入门文章
