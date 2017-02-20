@@ -213,9 +213,17 @@ public class GameServer {
 							printWriter.println(returnMessage.substring(0, returnMessage.length() - 2));
 							break;
 						}
-						case "STATUS": { // 当前谁的回合
-							room.host
+						case "STATUS" : {
+							printWriter.println("YOUR TURN");
 							break;	
+						}
+						case "PLAY CARD" : {
+							// cardIdStr : this param should be sent to.
+							String cardIdStr = "100";
+							int cardId = Integer.valueOf(cardIdStr);
+							
+							printWriter.println("SUCCESSFUL");
+							break;
 						}
 						default : {
 							System.out.println("Other command.");
