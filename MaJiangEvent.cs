@@ -30,6 +30,7 @@ public class MaJiangEvent : MonoBehaviour {
 						0f
 					);
 				} else {
+					/* if is your turn, double click will sent the Majiang out.*/
 					this.isInOriginalPositions = true;
 					this.gameObject.transform.position = new Vector3 (
 						this.gameObject.transform.position.x, 
