@@ -64,6 +64,7 @@ public class SocketHelper : MonoBehaviour {
 	private void ReceiveSorket() { 
 		Boolean isRoomOpen = false;
 		Boolean isInit = false;
+		Boolean isMyTurn = false;
 		//在这个线程中接受服务器返回的数据  
 		while (true) {
 			if (!socket.Connected) {
@@ -114,17 +115,57 @@ public class SocketHelper : MonoBehaviour {
 					initTopPlayer ();
 
 					isInit = true;
+					// need return a value for isMyTurn
+					isMyTurn = true;
 				}
-				string status = "status\r\n";
-				byte[] message = Encoding.ASCII.GetBytes(status);
-				socket.Send(message, message.Length, SocketFlags.None);
-
-				byte[] returnMsg = new byte[1024];
-				int returnMsgSize = socket.Receive(returnMsg);
-				String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
-				Debug.Log(returnMsgStr); 
-
-
+				
+				if (isMyTurn) {
+					// 计时器动画开始渲染
+					while (!isPlayed) { //可能需要开线程,这个参数将有麻将的script修改
+						// 30秒超时退出
+					}; 
+					if (isPlayed) {
+						string playCard = "Play Card,100\r\n"; // this param will be update by MaJiangListener.
+						byte[] message = Encoding.ASCII.GetBytes(playCard);
+						socket.Send(message, message.Length, SocketFlags.None);
+						
+						byte[] returnMsg = new byte[1024];
+						int returnMsgSize = socket.Receive(returnMsg);
+						String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
+						Debug.Log(returnMsgStr);
+						if (returnMsgStr == "SUCCESSFUL") {
+							isPlayed = false;
+						} else {
+							// 这里可能要重复进行这部分操作直到成功
+						}
+					}
+					isMyTurn = false;
+				} else {
+					string status = "STATUS\r\n";
+					byte[] message = Encoding.ASCII.GetBytes(status);
+					socket.Send(message, message.Length, SocketFlags.None);
+					
+					byte[] returnMsg = new byte[1024];
+					int returnMsgSize = socket.Receive(returnMsg);
+					String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
+					Debug.Log(returnMsgStr);
+					
+					int cardId = 100; //这个参数是从returnMsg来的
+					if (returnMsgStr == "YOUR TURN") {
+						isMyTurn = true; // 全局变量
+					} else if (returnMsgStr == "EAST") { // 东家回合
+						// 计时器效果开启
+					} else if (returnMsgStr == "EAST POST") { // 东家出牌
+						// 麻将打出画面
+						// 这里需要一个计时器，大概给3秒钟的时间，让大家可以比较从容操作
+						// 本地逻辑判断是不是可以进行：吃，碰，杠，胡
+						if(canDo(cardId)) { 
+							// 将这四个操作的图标安是否能操作，显示相关的颜色，并渲染
+						}
+					} else {
+						// 其他家的逻辑再说
+					} 
+				}
 			} catch (Exception e) {
 				Debug.Log("Failed to clientSocket error." + e);  
 				socket.Close();  
