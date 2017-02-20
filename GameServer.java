@@ -53,13 +53,84 @@ public class GameServer {
 	
 	private class Room {
 		private int roomId;
-		private Player host;
+		private Player host;  
 		private List<Player> players = new ArrayList<Player>();
+		private Deck deck;
 		
 		public Room(int roomId, Player player) {
 			this.roomId = roomId;
 			host = player;
 			players.add(host);
+			if (deck == null) {
+				deck = new Deck();
+			}
+		}
+		
+		public Hand initHand(Player thePlayer) {
+			for (Player player: players) {
+				if (player.equals(thePlayer)) {
+					return deck.createHand(player);
+				}
+			}
+			return null;
+		}
+	}
+	
+	private class Deck {
+		final static int DECK_SIZE = 144;
+		MaJiang[] library = new MaJiang[DECK_SIZE];
+		int posInLibrary = 0;
+		final static int HAND_SIZE = 16;
+		List<Hand> hands = new ArrayList<Hand>();
+		
+		public Deck() {
+			for (int i = 0; i < DECK_SIZE; i ++) {
+				library[i] = new MaJiang(i);
+			}
+			disorderLibrary(library);
+		}
+		
+		public synchronized Hand createHand(Player player) {
+			List<MaJiang> cards = new ArrayList<MaJiang>();
+			int count = 0;
+			while (count < HAND_SIZE) {
+				cards.add(library[posInLibrary ++]);
+				count ++;
+			}
+			Hand hand = new Hand(player, cards);
+			hands.add(hand);
+			return hand;
+		}
+		
+		private void disorderLibrary(MaJiang[] library) {
+			int count = library.length;
+			Random rand = new Random(); 
+			int nowCount = 0;
+			int nowPosition = 0;
+			MaJiang temp;
+			for (int i = 0; i < count; i ++) {
+				int r = count - nowCount;
+				nowPosition = rand.nextInt(r);
+				nowCount ++;
+				temp = library[nowPosition]; library[nowPosition] = library[r - 1]; library[r - 1] = temp;
+			}
+		}
+	}
+	
+	private class Hand {
+		Player player;
+		List<MaJiang> cards;
+		
+		public Hand(Player player, List<MaJiang> cards) {
+			this.player = player;
+			this.cards = cards;
+		}
+	}
+	
+	private class MaJiang {
+		int id;
+		public MaJiang(int id) {
+			this.id = id;
 		}
 	}
 	
@@ -132,6 +203,19 @@ public class GameServer {
 							System.out.println("Quitted the room!");
 							printWriter.println("Quitted the room!");
 							break;
+						}
+						case "INIT" : {
+							Hand hand = room.initHand(this);
+							StringBuffer returnMessage = new StringBuffer();
+							for (MaJiang maJiang : hand.cards) {
+								returnMessage.append(maJiang.id + ",");
+							}
+							printWriter.println(returnMessage.substring(0, returnMessage.length() - 2));
+							break;
+						}
+						case "STATUS": { // 当前谁的回合
+							room.host
+							break;	
 						}
 						default : {
 							System.out.println("Other command.");
