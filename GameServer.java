@@ -225,6 +225,12 @@ public class GameServer {
 							printWriter.println("SUCCESSFUL");
 							break;
 						}
+						case "DRAW A CARD" : {
+							String cardIdStr = "100";
+							System.out.println(cardIdStr);
+							printWriter.println(cardIdStr);
+							break;
+						}
 						default : {
 							System.out.println("Other command.");
 							printWriter.println("Other command.");
