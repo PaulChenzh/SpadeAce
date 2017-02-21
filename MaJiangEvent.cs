@@ -8,13 +8,16 @@ public class MaJiangEvent : MonoBehaviour {
 	public Boolean isInOriginalPositions = true;
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start () {}
+	// Update is called once per frame
+	void Update () {}
+	
+	private void choosedCardInHand(Position position) {
+		position = new Vector3 (position.x, position.y + 0.2f, 0f);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	private void releasedCardInHand(Position position) {
+		position = new Vector3 (position.x, position.y - 0.2f, 0f);
 	}
 
 	void OnMouseDown() {
@@ -24,29 +27,24 @@ public class MaJiangEvent : MonoBehaviour {
 			if (this.gameObject.Equals(aObject)) {
 				if (this.isInOriginalPositions) {
 					this.isInOriginalPositions = false;
-					this.gameObject.transform.position = new Vector3 (
-						this.gameObject.transform.position.x, 
-						this.gameObject.transform.position.y + 0.2f,
-						0f
-					);
+					choosedCardInHand(this.gameObject.transform.position);
 				} else {
 					/* if is your turn, double click will sent the Majiang out.*/
-					this.isInOriginalPositions = true;
-					this.gameObject.transform.position = new Vector3 (
-						this.gameObject.transform.position.x, 
-						this.gameObject.transform.position.y - 0.2f,
-						0f
-					);
+					if (Main.isMyTurn && !Main.isPlayed) {
+						// 使这张牌在手牌消失
+						// 出现打出这张牌的效果（比如打出去的动画+放大显示在前面一秒+该牌放置在自己的打出牌堆
+						// 重排手牌
+						Main.isPlayed = false;
+					} else {
+						this.isInOriginalPositions = true;
+						releasedCardInHand(this.gameObject.transform.position);
+					}
 				}
 			} else {
 				MaJiangEvent otherEvent = aObject.GetComponent<MaJiangEvent>();
 				if (!otherEvent.isInOriginalPositions) {
 					otherEvent.isInOriginalPositions = true;
-					aObject.transform.position = new Vector3 (
-						aObject.transform.position.x, 
-						aObject.transform.position.y - 0.2f,
-						0f
-					);
+					releasedCardInHand(aObject.transform.position);
 				}
 			}
 		}
