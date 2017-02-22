@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,12 +11,12 @@ public class MaJiangEvent : MonoBehaviour {
 	void Start () {}
 	// Update is called once per frame
 	void Update () {}
-	
-	private void choosedCardInHand(Position position) {
+
+	private void choosedCardInHand(Vector3 position) {
 		position = new Vector3 (position.x, position.y + 0.2f, 0f);
 	}
-	
-	private void releasedCardInHand(Position position) {
+
+	private void releasedCardInHand(Vector3 position) {
 		position = new Vector3 (position.x, position.y - 0.2f, 0f);
 	}
 
