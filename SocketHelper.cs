@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,55 +12,55 @@ using System.Text;
 public class SocketHelper : MonoBehaviour {
 	private static SocketHelper socketHelper = new SocketHelper();  
 	private Socket socket;
-	
-	private Hand myHand = new Hand();
-	
-	private class Card {
+
+	public Hand myHand = new Hand();
+
+	public class Card {
 		GameObject maJiang;
 		int maJiangId;
-		
+
 		public Card(GameObject maJiang, int maJiangId) {
 			this.maJiang = maJiang;
 			this.maJiangId = maJiangId;
 		}
 	}
-	
-	private class Hand {
-		List<Card> cards = new ArrayList<Card>();
+
+	public class Hand {
+		public List<Card> cards = new List<Card>();
 	}
 
 	public static SocketHelper GetInstance() {
 		return socketHelper;
 	}
-	
+
 	public void update() {
-		if (isMyTurn) {
+		if (Main.isMyTurn) {
 			// 计时器动画开始渲染 - 应该不是用动画实现
 			// 如何渲染？如何没秒改变一次时间？
-			if (!isGetACard) { 
+			if (!Main.isGetACard) { 
 				// 请求发牌
 				string status = "Draw A Card\r\n";
 				byte[] message = Encoding.ASCII.GetBytes(status);
 				socket.Send(message, message.Length, SocketFlags.None);
-				
+
 				byte[] returnMsg = new byte[1024];
 				int returnMsgSize = socket.Receive(returnMsg);
 				String cardId = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
-				Debug.Log(returnMsgStr);
-				
+				Debug.Log(cardId);
+
 				drawACard(cardId);
-				isGetACard = true;
-			} else if (isPlayed){ 
+				Main.isGetACard = true;
+			} else if (Main.isPlayed){ 
 				string playCard = "Play Card,100\r\n"; // this param will be update by MaJiangListener.
 				byte[] message = Encoding.ASCII.GetBytes(playCard);
 				socket.Send(message, message.Length, SocketFlags.None);
-				
+
 				byte[] returnMsg = new byte[1024];
 				int returnMsgSize = socket.Receive(returnMsg);
 				String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
 				Debug.Log(returnMsgStr);
 				if (returnMsgStr == "SUCCESSFUL") {
-					isMyTurn = false;
+					Main.isMyTurn = false;
 					Debug.Log("SUCCESSFUL");
 				}
 			}
@@ -68,15 +68,15 @@ public class SocketHelper : MonoBehaviour {
 			string status = "STATUS\r\n";
 			byte[] message = Encoding.ASCII.GetBytes(status);
 			socket.Send(message, message.Length, SocketFlags.None);
-			
+
 			byte[] returnMsg = new byte[1024];
 			int returnMsgSize = socket.Receive(returnMsg);
 			String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
 			Debug.Log(returnMsgStr);
-			
+
 			int cardId = 100; //这个参数是从returnMsg来的
 			if (returnMsgStr == "YOUR TURN") {
-				isMyTurn = true; // 全局变量
+				Main.isMyTurn = true; // 全局变量
 			} else if (returnMsgStr == "EAST") { // 东家回合
 				// 计时器效果开启
 			} else if (returnMsgStr == "EAST POST") { // 东家出牌
@@ -91,50 +91,60 @@ public class SocketHelper : MonoBehaviour {
 			} 
 		}
 	}
-	
+
 	private Boolean canDo(int cardId) {
-		if (canChi) {
+		float startPositionX = 0f;
+		float startPositionY = 0f;
+		Boolean isCanChi = canChi();
+		Boolean isCanPeng = canPeng ();
+		Boolean isCanGang = canGang ();
+		Boolean isCanHu = canHu ();
+		if (isCanChi) {
 			// 将“吃”显示出来
 			GameObject chi = Resources.Load ("chi") as GameObject;
 			// 位置需要调整
-			chi.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
+			chi.transform.position = new Vector3 (startPositionX + 0.33f, startPositionY, 0f); 
 			Instantiate (chi);
 			// 是不是需要加入一个全局的队列里面？
 		}
-		if (canPeng) {
+		if (isCanPeng) {
 			// 将“碰”显示出来
 			GameObject peng = Resources.Load ("peng") as GameObject;
 			// 位置需要调整
-			peng.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
+			peng.transform.position = new Vector3 (startPositionX + 0.33f, startPositionY, 0f); 
 			Instantiate (peng);
 		}
-		if (canGang) {
+		if (isCanGang) {
 			// 将“碰”显示出来
 			GameObject gang = Resources.Load ("gang") as GameObject;
 			// 位置需要调整
-			gang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
+			gang.transform.position = new Vector3 (startPositionX + 0.33f, startPositionY, 0f); 
 			Instantiate (gang);
 		}
-		if (canHu) {
+		if (isCanHu) {
 			// 将“碰”显示出来
 			GameObject hu = Resources.Load ("hu") as GameObject;
 			// 位置需要调整
-			hu.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
+			hu.transform.position = new Vector3 (startPositionX + 0.33f, startPositionY, 0f); 
 			Instantiate (hu);
 		}
+		if (isCanChi || isCanPeng || isCanGang || isCanHu) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	private Boolean canChi() { 
 		/**
 		* 现在打算这样，点击一下"吃"，则将可以吃的牌高亮，选择其中一张，则自动匹配另一张，打出
 		* 当然，这段逻辑不是写在这里，只是用来备忘
 		*/ 
 		foreach (Card card in myHand.cards) {
-			
+
 		}
 		return false;
 	}
-	
+
 	private Boolean canPeng() {
 		return false;
 	}
@@ -145,7 +155,7 @@ public class SocketHelper : MonoBehaviour {
 	private Boolean canHu() {
 		return false;
 	}
-	
+
 	private SocketHelper() {
 		//采用TCP方式连接  
 		socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); 
@@ -162,10 +172,10 @@ public class SocketHelper : MonoBehaviour {
 			Closed ();  
 			Debug.Log ("connection Time Out");  
 		} else {
-//			与socket建立连接成功，开启线程接受服务端数据。  
-//			Thread thread = new Thread(new ThreadStart(ReceiveSorket));  
-//			thread.IsBackground = true;  
-//			thread.Start(); 
+			//			与socket建立连接成功，开启线程接受服务端数据。  
+			//			Thread thread = new Thread(new ThreadStart(ReceiveSorket));  
+			//			thread.IsBackground = true;  
+			//			thread.Start(); 
 			ReceiveSorket();
 		}
 	}
@@ -230,7 +240,7 @@ public class SocketHelper : MonoBehaviour {
 
 					isInit = true;
 					// need return a value for isMyTurn
-					isMyTurn = true;
+					Main.isMyTurn = true;
 					break;
 				}
 			} catch (Exception e) {
@@ -240,12 +250,12 @@ public class SocketHelper : MonoBehaviour {
 			}
 		} 
 	}
-		
+
 	private void drawACard(String maJiangId) {
 		GameObject maJiang = Resources.Load (maJiangId) as GameObject;
 		maJiang.transform.position = new Vector3 (3f, -2f, 0f); 
 		Instantiate (maJiang);
-		myHand.cards.add(new Card(maJiang, int.Parse(maJiangId)));
+		myHand.cards.Add(new Card(maJiang, int.Parse(maJiangId)));
 	}
 
 	void initMyPlayer(int[] hand) {
@@ -267,7 +277,7 @@ public class SocketHelper : MonoBehaviour {
 			}
 			maJiang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
 			Instantiate (maJiang);	
-			myHand.cards.add(new Card(maJiang, hand[i]));
+			myHand.cards.Add(new Card(maJiang, hand[i]));
 		}
 	}
 
