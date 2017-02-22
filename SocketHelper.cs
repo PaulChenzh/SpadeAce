@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,22 +12,6 @@ using System.Text;
 public class SocketHelper : MonoBehaviour {
 	private static SocketHelper socketHelper = new SocketHelper();  
 	private Socket socket;
-
-	public Hand myHand = new Hand();
-
-	public class Card {
-		GameObject maJiang;
-		int maJiangId;
-
-		public Card(GameObject maJiang, int maJiangId) {
-			this.maJiang = maJiang;
-			this.maJiangId = maJiangId;
-		}
-	}
-
-	public class Hand {
-		public List<Card> cards = new List<Card>();
-	}
 
 	public static SocketHelper GetInstance() {
 		return socketHelper;
@@ -139,7 +123,7 @@ public class SocketHelper : MonoBehaviour {
 		* 现在打算这样，点击一下"吃"，则将可以吃的牌高亮，选择其中一张，则自动匹配另一张，打出
 		* 当然，这段逻辑不是写在这里，只是用来备忘
 		*/ 
-		foreach (Card card in myHand.cards) {
+		foreach (Card card in Main.myHand.cards) {
 
 		}
 		return false;
@@ -255,7 +239,7 @@ public class SocketHelper : MonoBehaviour {
 		GameObject maJiang = Resources.Load (maJiangId) as GameObject;
 		maJiang.transform.position = new Vector3 (3f, -2f, 0f); 
 		Instantiate (maJiang);
-		myHand.cards.Add(new Card(maJiang, int.Parse(maJiangId)));
+		Main.myHand.cards.Add(new Card(maJiang, int.Parse(maJiangId)));
 	}
 
 	void initMyPlayer(int[] hand) {
@@ -277,7 +261,7 @@ public class SocketHelper : MonoBehaviour {
 			}
 			maJiang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
 			Instantiate (maJiang);	
-			myHand.cards.Add(new Card(maJiang, hand[i]));
+			Main.myHand.cards.Add(new Card(maJiang, hand[i]));
 		}
 	}
 
