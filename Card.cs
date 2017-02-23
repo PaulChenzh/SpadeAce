@@ -1,3 +1,6 @@
+﻿using System;
+using UnityEngine;
+
 public class Card {
 	private GameObject maJiang;
 	private int maJiangId;
@@ -6,12 +9,12 @@ public class Card {
 		this.maJiang = maJiang;
 		this.maJiangId = maJiangId;
 	}
-	
+
 	public GameObject getMaJiang() {
 		return maJiang;
 	}
-	
+
 	public int getMaJiangId() {
-		return MaJiangId;
+		return maJiangId;
 	}
 }

@@ -19,9 +19,11 @@ public class SocketHelper : MonoBehaviour {
 
 	public void update() {
 		if (Main.isMyTurn) {
+			Debug.Log("isMyTurn" + Main.isMyTurn);
 			// 计时器动画开始渲染 - 应该不是用动画实现
 			// 如何渲染？如何没秒改变一次时间？
 			if (!Main.isGetACard) { 
+				Debug.Log("发牌");
 				// 请求发牌
 				string status = "Draw A Card\r\n";
 				byte[] message = Encoding.ASCII.GetBytes(status);
@@ -32,8 +34,9 @@ public class SocketHelper : MonoBehaviour {
 				String cardId = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
 				Debug.Log(cardId);
 
-				drawACard(cardId);
+				drawACard(int.Parse(cardId));
 				Main.isGetACard = true;
+				Debug.Log("isGetACard" + Main.isGetACard);
 			} else if (Main.isPlayed){ 
 				string playCard = "Play Card,100\r\n"; // this param will be update by MaJiangListener.
 				byte[] message = Encoding.ASCII.GetBytes(playCard);
@@ -49,6 +52,7 @@ public class SocketHelper : MonoBehaviour {
 				}
 			}
 		} else {
+			Debug.Log("Main.isMyTurn false");
 			string status = "STATUS\r\n";
 			byte[] message = Encoding.ASCII.GetBytes(status);
 			socket.Send(message, message.Length, SocketFlags.None);
@@ -58,7 +62,7 @@ public class SocketHelper : MonoBehaviour {
 			String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
 			Debug.Log(returnMsgStr);
 
-			int cardId = 100; //这个参数是从returnMsg来的
+			int cardId = 40; //这个参数是从returnMsg来的
 			if (returnMsgStr == "YOUR TURN") {
 				Main.isMyTurn = true; // 全局变量
 			} else if (returnMsgStr == "EAST") { // 东家回合
@@ -67,7 +71,9 @@ public class SocketHelper : MonoBehaviour {
 				// 麻将打出画面
 				// 这里需要一个计时器，大概给3秒钟的时间，让大家可以比较从容操作
 				// 本地逻辑判断是不是可以进行：吃，碰，杠，胡
-				if(canDo(cardId)) { 
+				Debug.Log("chichichi!!!");
+				if(canDo(cardId)) {
+					Debug.Log("chichichi");
 					// 将这四个操作的图标安是否能操作，显示相关的颜色，并渲染
 				}
 			} else {
@@ -87,7 +93,7 @@ public class SocketHelper : MonoBehaviour {
 			// 将“吃”显示出来
 			GameObject chi = Resources.Load ("chi") as GameObject;
 			// 位置需要调整
-			chi.transform.position = new Vector3 (startPositionX + 0.33f, startPositionY, 0f); 
+			chi.transform.position = new Vector3 (startPositionX, startPositionY - 1f, 0f); 
 			Instantiate (chi);
 			// 是不是需要加入一个全局的队列里面？
 		}
@@ -123,7 +129,7 @@ public class SocketHelper : MonoBehaviour {
 		* 现在打算这样，点击一下"吃"，则将可以吃的牌高亮，选择其中一张，则自动匹配另一张，打出
 		* 当然，这段逻辑不是写在这里，只是用来备忘
 		*/ 
-		foreach (Card card in Main.myHand.cards) {
+		foreach (Card card in Main.myHand.getCards()) {
 
 		}
 		return false;
@@ -138,6 +144,76 @@ public class SocketHelper : MonoBehaviour {
 	}
 	private Boolean canHu() {
 		return false;
+	}
+
+	private void drawACard(int maJiangId) { 
+		GameObject maJiang = Resources.Load ((maJiangId / 4).ToString ()) as GameObject;  
+		maJiang.transform.position = new Vector3 (3f, -2f, 0f);    
+		Instantiate (maJiang);  
+		List<Card> cards = Main.myHand.getCards ();  
+		cards.Add(new Card(maJiang, maJiangId));  
+	}
+
+	void initMyPlayer(int[] hand) {
+		float startPositionX = -2.7f;
+		float startPositionY = -2f;
+		for (int i = 0; i < 16; i++) {
+			GameObject maJiang;
+			// 这段逻辑在所有牌全部设计出来后,将会替换成
+			/*
+			String cardName = String.Parse(hand [i] / 4);
+			maJiang = Resources.Load ("cardName") as GameObject;
+			*/
+			if (hand [i] % 4 == 1) { 
+				maJiang = Resources.Load ("w1InHand") as GameObject;
+			} else if (hand [i] % 4 == 2) {
+				maJiang = Resources.Load ("w2InHand") as GameObject;
+			} else {
+				maJiang = Resources.Load ("otherInHand") as GameObject;
+			}
+			maJiang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
+			Instantiate (maJiang);	
+			Main.myHand.getCards().Add(new Card(maJiang, hand[i]));
+		}
+	}
+
+	void initLeftPlayer() {
+		List<GameObject> leftPlayerDeck = new List<GameObject> ();
+		float startPositionX = -3f;
+		float startPositionY = 2f;
+		for (int i = 0; i < 16; i++) {
+			GameObject maJiang;
+			maJiang = Resources.Load ("leftPlayerMaJiang") as GameObject;
+			maJiang.transform.position = new Vector3 (startPositionX, startPositionY - i * 0.2f, 0f); 
+			leftPlayerDeck.Add (maJiang);
+			Instantiate (maJiang);	
+		}
+	}
+
+	void initRightPlayer() {
+		List<GameObject> rightPlayerDeck = new List<GameObject> ();
+		float startPositionX = 3f;
+		float startPositionY = 2f;
+		for (int i = 0; i < 16; i++) {
+			GameObject maJiang;
+			maJiang = Resources.Load ("rightPlayerMaJiang") as GameObject;
+			maJiang.transform.position = new Vector3 (startPositionX, startPositionY - i * 0.2f, 0f); 
+			rightPlayerDeck.Add (maJiang);
+			Instantiate (maJiang);	
+		}
+	}
+
+	void initTopPlayer() {
+		List<GameObject> topPlayerDeck = new List<GameObject> ();
+		float startPositionX = -1.8f;
+		float startPositionY = 2.5f;
+		for (int i = 0; i < 16; i++) {
+			GameObject maJiang;
+			maJiang = Resources.Load ("topPlayerMaJiang") as GameObject;
+			maJiang.transform.position = new Vector3 (startPositionX + i * 0.29f, startPositionY, 0f); 
+			topPlayerDeck.Add (maJiang);
+			Instantiate (maJiang);	
+		}
 	}
 
 	private SocketHelper() {
@@ -224,7 +300,7 @@ public class SocketHelper : MonoBehaviour {
 
 					isInit = true;
 					// need return a value for isMyTurn
-					Main.isMyTurn = true;
+					Main.isMyTurn = false;
 					break;
 				}
 			} catch (Exception e) {
@@ -233,74 +309,5 @@ public class SocketHelper : MonoBehaviour {
 				break;  
 			}
 		} 
-	}
-
-	private void drawACard(String maJiangId) {
-		GameObject maJiang = Resources.Load (maJiangId) as GameObject;
-		maJiang.transform.position = new Vector3 (3f, -2f, 0f); 
-		Instantiate (maJiang);
-		Main.myHand.cards.Add(new Card(maJiang, int.Parse(maJiangId)));
-	}
-
-	void initMyPlayer(int[] hand) {
-		float startPositionX = -2.7f;
-		float startPositionY = -2f;
-		for (int i = 0; i < 16; i++) {
-			GameObject maJiang;
-			// 这段逻辑在所有牌全部设计出来后,将会替换成
-			/*
-			String cardName = String.Parse(hand [i] / 4);
-			maJiang = Resources.Load ("cardName") as GameObject;
-			*/
-			if (hand [i] % 4 == 1) { 
-				maJiang = Resources.Load ("w1InHand") as GameObject;
-			} else if (hand [i] % 4 == 2) {
-				maJiang = Resources.Load ("w2InHand") as GameObject;
-			} else {
-				maJiang = Resources.Load ("otherInHand") as GameObject;
-			}
-			maJiang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
-			Instantiate (maJiang);	
-			Main.myHand.cards.Add(new Card(maJiang, hand[i]));
-		}
-	}
-
-	void initLeftPlayer() {
-		List<GameObject> leftPlayerDeck = new List<GameObject> ();
-		float startPositionX = -3f;
-		float startPositionY = 2f;
-		for (int i = 0; i < 16; i++) {
-			GameObject maJiang;
-			maJiang = Resources.Load ("leftPlayerMaJiang") as GameObject;
-			maJiang.transform.position = new Vector3 (startPositionX, startPositionY - i * 0.2f, 0f); 
-			leftPlayerDeck.Add (maJiang);
-			Instantiate (maJiang);	
-		}
-	}
-
-	void initRightPlayer() {
-		List<GameObject> rightPlayerDeck = new List<GameObject> ();
-		float startPositionX = 3f;
-		float startPositionY = 2f;
-		for (int i = 0; i < 16; i++) {
-			GameObject maJiang;
-			maJiang = Resources.Load ("rightPlayerMaJiang") as GameObject;
-			maJiang.transform.position = new Vector3 (startPositionX, startPositionY - i * 0.2f, 0f); 
-			rightPlayerDeck.Add (maJiang);
-			Instantiate (maJiang);	
-		}
-	}
-
-	void initTopPlayer() {
-		List<GameObject> topPlayerDeck = new List<GameObject> ();
-		float startPositionX = -1.8f;
-		float startPositionY = 2.5f;
-		for (int i = 0; i < 16; i++) {
-			GameObject maJiang;
-			maJiang = Resources.Load ("topPlayerMaJiang") as GameObject;
-			maJiang.transform.position = new Vector3 (startPositionX + i * 0.29f, startPositionY, 0f); 
-			topPlayerDeck.Add (maJiang);
-			Instantiate (maJiang);	
-		}
 	}
 }
