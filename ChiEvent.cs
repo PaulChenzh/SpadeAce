@@ -36,6 +36,7 @@ public class ChiEvent : MonoBehaviour {
 				if( maJiangEvent != null ) {
 					maJiangEvent.StopAllCoroutines();
 					// 再将该麻将变灰
+					// 这里需要调研一下，看如果动态替换图片，或者是将图片亮度调低（这个更好我觉得）
 				}
 			}
 			Main.isChing = true;
@@ -88,4 +89,3 @@ public class ChiEvent : MonoBehaviour {
 		return tempList;
 	}
 }
-
