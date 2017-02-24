@@ -1,2 +1,0 @@
-1. 抽取每个user的tag, 回答的所有问题的tag以及每个tag的数量, user的words and characters, 
-他回答得所有的问题的words and characters和每个words and characters的出现次数。
