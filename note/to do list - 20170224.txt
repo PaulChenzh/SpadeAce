@@ -1,0 +1,8 @@
+personal:
+1. 将github上的4张入职培训的照片放到百度云
+2. 在家里用电脑比较方便，将其他github上的文件归档
+3. 顺便看一下手机端能不能用github,有没有app
+
+
+work:
+1. 丽丽上次说要教我们怎么申请sit的linux box权限。
