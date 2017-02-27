@@ -22,6 +22,8 @@ public class GameServer {
 	private boolean[] isRoomUsed = new boolean[totalRoom];
 	private final int roomSize = 4;
 	
+	private int nowPlayer = 0;
+	
 	public GameServer() throws IOException {
 		serverSocket = new ServerSocket(port);
 		serverSocket.setReuseAddress(true);
@@ -82,12 +84,15 @@ public class GameServer {
 		int posInLibrary = 0;
 		final static int HAND_SIZE = 16;
 		List<Hand> hands = new ArrayList<Hand>();
+		private int jin;
 		
 		public Deck() {
 			for (int i = 0; i < DECK_SIZE; i ++) {
 				library[i] = new MaJiang(i);
 			}
 			disorderLibrary(library);
+			// 如果有金，则第一张符合的是金
+			jin = library[posInLibrary ++].id;
 		}
 		
 		public synchronized Hand createHand(Player player) {
@@ -114,6 +119,10 @@ public class GameServer {
 				nowCount ++;
 				temp = library[nowPosition]; library[nowPosition] = library[r - 1]; library[r - 1] = temp;
 			}
+		}
+		
+		private int getJin() {
+			return jin;
 		}
 	}
 	
@@ -205,28 +214,38 @@ public class GameServer {
 							break;
 						}
 						case "INIT" : {
+							printWriter.println(room.deck.jin); // 如果有金，则先告知金是什么 
 							Hand hand = room.initHand(this);
 							StringBuffer returnMessage = new StringBuffer();
 							for (MaJiang maJiang : hand.cards) {
 								returnMessage.append(maJiang.id + ",");
 							}
 							printWriter.println(returnMessage.substring(0, returnMessage.length() - 2));
+							
 							break;
 						}
 						case "STATUS" : {
-							printWriter.println("YOUR TURN");
+							System.out.println("STATUS");
+							if (nowPlayer == 0) {
+								printWriter.println("YOUR TURN");
+								System.out.println("YOUR TURN");
+							} else {
+								printWriter.println("EAST POST");
+								System.out.println("EAST POST");
+							}
+							nowPlayer = (nowPlayer + 1) % 4;
 							break;	
 						}
 						case "PLAY CARD" : {
 							// cardIdStr : this param should be sent to.
-							String cardIdStr = "100";
+							String cardIdStr = "40";
 							int cardId = Integer.valueOf(cardIdStr);
 							
 							printWriter.println("SUCCESSFUL");
 							break;
 						}
 						case "DRAW A CARD" : {
-							String cardIdStr = "100";
+							String cardIdStr = "40";
 							System.out.println(cardIdStr);
 							printWriter.println(cardIdStr);
 							break;

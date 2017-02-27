@@ -1,4 +1,4 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -57,7 +57,7 @@ public class SocketHelper : MonoBehaviour {
 			string status = "STATUS\r\n";
 			byte[] message = Encoding.ASCII.GetBytes(status);
 			socket.Send(message, message.Length, SocketFlags.None);
-
+			Debug.Log("1111");
 			byte[] returnMsg = new byte[1024];
 			int returnMsgSize = socket.Receive(returnMsg);
 			String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
@@ -66,6 +66,7 @@ public class SocketHelper : MonoBehaviour {
 			int cardId = 40; //这个参数是从returnMsg来的
 			if (returnMsgStr == "YOUR TURN") {
 				Main.isMyTurn = true; // 全局变量
+				Debug.Log("is my turn");
 			} else if (returnMsgStr == "EAST") { // 东家回合
 				// 计时器效果开启
 			} else if (returnMsgStr == "EAST POST") { // 东家出牌
@@ -76,8 +77,9 @@ public class SocketHelper : MonoBehaviour {
 				//if (Main.myHand.isActionable(cardId)) { 
 				//	Main.myHand.getActions(cardId);
 				//}
-				UserAction userAction = new UserAction(cardId);
-				userAction.do();
+				Debug.Log("EAST POST");
+				Main.userAction = new UserAction(cardId);
+				Main.userAction.showAction();
 			} else {
 				// 其他家的逻辑再说
 			} 
@@ -92,32 +94,38 @@ public class SocketHelper : MonoBehaviour {
 	}
 
 	void initMyPlayer(int[] hand) {
+		// 启用假的牌
+		hand = new int[]{10, 11, 1, 0, 9, 22, 9, 10, 11, 1, 0, 9, 22, 9, 10, 11};
 		List<Card> cards = Main.myHand.getCards();
 		for (int i = 0; i < 16; i++) {
-			cards.Add(new Card(Resources.Load (hand[i].toString()) as GameObject, hand[i]));
+//			cards.Add(new Card(Resources.Load (hand[i].ToString()) as GameObject, hand[i]));
+			GameObject maJiang = Resources.Load ("1") as GameObject;
+			cards.Add(new Card(maJiang, hand[i]));
+			Instantiate (cards[i].getMaJiang());
 		}
-		Main.myHand.reorder();
-		for (int i = 0; i < 16; i++) { Instantiate (cards[i]); }			
-	//	float startPositionX = -2.7f;
-	//	float startPositionY = -2f;
-	//	for (int i = 0; i < 16; i++) {
-	//		GameObject maJiang;
-	//		// 这段逻辑在所有牌全部设计出来后,将会替换成
-	//		/*
-	//		String cardName = String.Parse(hand [i] / 4);
-	//		maJiang = Resources.Load ("cardName") as GameObject;
-	//		*/
-	//		if (hand [i] % 4 == 1) { 
-	//			maJiang = Resources.Load ("w1InHand") as GameObject;
-	//		} else if (hand [i] % 4 == 2) {
-	//			maJiang = Resources.Load ("w2InHand") as GameObject;
-	//		} else {
-	//			maJiang = Resources.Load ("otherInHand") as GameObject;
-	//		}
-	//		maJiang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
-	//		Instantiate (maJiang);	
-	//		
-	//	}
+//		Main.myHand.reorder();
+		Main.myHand.reposition();
+		for (int i = 0; i < 16; i++) {  }			
+		//	float startPositionX = -2.7f;
+		//	float startPositionY = -2f;
+		//	for (int i = 0; i < 16; i++) {
+		//		GameObject maJiang;
+		//		// 这段逻辑在所有牌全部设计出来后,将会替换成
+		//		/*
+		//		String cardName = String.Parse(hand [i] / 4);
+		//		maJiang = Resources.Load ("cardName") as GameObject;
+		//		*/
+		//		if (hand [i] % 4 == 1) { 
+		//			maJiang = Resources.Load ("w1InHand") as GameObject;
+		//		} else if (hand [i] % 4 == 2) {
+		//			maJiang = Resources.Load ("w2InHand") as GameObject;
+		//		} else {
+		//			maJiang = Resources.Load ("otherInHand") as GameObject;
+		//		}
+		//		maJiang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
+		//		Instantiate (maJiang);	
+		//		
+		//	}
 	}
 
 	void initLeftPlayer() {
@@ -197,7 +205,7 @@ public class SocketHelper : MonoBehaviour {
 	private void ReceiveSorket() { //在这个线程中接受服务器返回的数据  
 		Boolean isRoomOpen = false;
 		Boolean isInit = false;
-		
+
 		while (true) {
 			if (!socket.Connected) { //与服务器断开连接跳出循环 
 				Debug.Log("Failed to clientSocket server.");  
@@ -221,12 +229,18 @@ public class SocketHelper : MonoBehaviour {
 					byte[] data = Encoding.ASCII.GetBytes(initStr);
 					socket.Send(data, data.Length, SocketFlags.None);
 
-					byte[] receive = new byte[1024];
+					byte[] receive = new byte[1024]; // 获取手牌
 					int receiceDataSize = socket.Receive(receive);
 					String receiveData = Encoding.ASCII.GetString(receive, 0, receiceDataSize);
 					Debug.Log(receiveData); 
+					Main.jin = int.Parse(receiveData);
 
-					string[] ids = receiveData.Split(','); 
+					receive = new byte[1024]; // 如果有金，获取金 
+					receiceDataSize = socket.Receive(receive);
+					receiveData = Encoding.ASCII.GetString(receive, 0, receiceDataSize);
+					Debug.Log(receiveData); 
+
+					string[] ids = receiveData.Split(',');  //如果有金，是不是要把金单独放在左边 ？
 					initMyPlayer (Array.ConvertAll<string, int>(ids, s => int.Parse(s)));
 					initLeftPlayer ();
 					initRightPlayer ();

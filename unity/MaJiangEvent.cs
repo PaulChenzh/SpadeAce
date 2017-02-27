@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +12,7 @@ public class MaJiangEvent : MonoBehaviour {
 
 	void OnMouseDown() {
 		List<Card> cards = Main.myHand.getCards();
-		for (int i = cards.Length; i >= 0; i --) {
+		for (int i = cards.Count; i >= 0; i --) {
 			GameObject aObject = cards[i].getMaJiang();
 			if (this.gameObject.Equals(aObject)) {
 				Vector3 position = this.gameObject.transform.position;
@@ -24,7 +24,7 @@ public class MaJiangEvent : MonoBehaviour {
 						this.gameObject.SetActive (false); // 使这张牌在手牌消失
 						// 出现打出这张牌的效果（比如打出去的动画+放大显示在前面一秒+该牌放置在自己的打出牌堆
 						cards.RemoveAt(i);
-						myHand.Reorder(); // 重排手牌
+						Main.myHand.reorder(); // 重排手牌
 						Main.isPlayed = true;
 						break;
 					} else {

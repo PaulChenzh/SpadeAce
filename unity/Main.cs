@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +10,14 @@ public class Main : MonoBehaviour {
 	public static Boolean isPlayed = false;
 	public static Boolean isGetACard = false;
 
+	public static int jin;
 	public static Boolean isChing = false;
+	public static Boolean isPenging = false;
+	public static Boolean isGanging = false;
+	public static Boolean isHuing = false;
 	public static int currentMaJiangid;
 	public static Hand myHand = new Hand();
+	public static UserAction userAction;
 
 	void Start () {
 		socketHelper = SocketHelper.GetInstance();

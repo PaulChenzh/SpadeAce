@@ -1,6 +1,4 @@
 ﻿using System;
-
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,14 +9,6 @@ public class ChiEvent : MonoBehaviour {
 
 	void Start () {}
 	void Update () {}
-
-	private void choosedCardInHand(Vector3 position) {
-		position = new Vector3 (position.x, position.y + 0.2f, 0f);
-	}
-
-	private void releasedCardInHand(Vector3 position) {
-		position = new Vector3 (position.x, position.y - 0.2f, 0f);
-	}
 
 	void OnMouseDown() {
 		if (Main.isChing) {
