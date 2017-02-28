@@ -45,31 +45,30 @@ public class SocketHelper : MonoBehaviour {
 				byte[] returnMsg = new byte[1024];
 				int returnMsgSize = socket.Receive(returnMsg);
 				String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
-				Debug.Log(returnMsgStr);
+				Debug.Log(returnMsgStr + "!!!!!");
 				if (returnMsgStr == "SUCCESSFUL") {
 					Main.isMyTurn = false;
 					Debug.Log("SUCCESSFUL");
 				}
-				Main.myHand.reorder(); // 重排手牌
 			}
 		} else {
 			Debug.Log("Main.isMyTurn false");
 			string status = "STATUS\r\n";
 			byte[] message = Encoding.ASCII.GetBytes(status);
 			socket.Send(message, message.Length, SocketFlags.None);
-			Debug.Log("1111");
+
 			byte[] returnMsg = new byte[1024];
 			int returnMsgSize = socket.Receive(returnMsg);
 			String returnMsgStr = Encoding.ASCII.GetString(returnMsg, 0, returnMsgSize);
 			Debug.Log(returnMsgStr);
 
-			int cardId = 40; //这个参数是从returnMsg来的
-			if (returnMsgStr == "YOUR TURN") {
+			if (returnMsgStr == "YOUR TURN\n") {
 				Main.isMyTurn = true; // 全局变量
 				Debug.Log("is my turn");
 			} else if (returnMsgStr == "EAST") { // 东家回合
 				// 计时器效果开启
-			} else if (returnMsgStr == "EAST POST") { // 东家出牌
+			} else if (returnMsgStr.Contains("EAST POST")) { // 东家出牌
+				Debug.Log("EAST POST");
 				// 麻将打出画面
 				// 这里需要一个计时器，大概给3秒钟的时间，让大家可以比较从容操作
 				// 本地逻辑判断是不是可以进行：吃，碰，杠，胡
@@ -77,8 +76,10 @@ public class SocketHelper : MonoBehaviour {
 				//if (Main.myHand.isActionable(cardId)) { 
 				//	Main.myHand.getActions(cardId);
 				//}
-				Debug.Log("EAST POST");
-				Main.userAction = new UserAction(cardId);
+				int spliter = returnMsgStr.IndexOf(',');
+				String cardIdStr = returnMsgStr.Substring (spliter + 1, returnMsgStr.Length - spliter - 1);
+				int cardId = int.Parse(cardIdStr); //这个参数是从returnMsg来的
+				Main.userAction = new UserAction(cardId / 4);
 				Main.userAction.showAction();
 			} else {
 				// 其他家的逻辑再说
@@ -87,25 +88,23 @@ public class SocketHelper : MonoBehaviour {
 	}
 
 	private void drawACard(int maJiangId) { 
-		GameObject maJiang = Resources.Load ((maJiangId / 4).ToString ()) as GameObject;  
-		maJiang.transform.position = new Vector3 (3f, -2f, 0f);    
-		Instantiate (maJiang);  
-		Main.myHand.getCards ().Add(new Card(maJiang, maJiangId)); 
+		GameObject notInstantiateMaJiang = Resources.Load ((maJiangId / 4).ToString ()) as GameObject;  
+		notInstantiateMaJiang.transform.position = new Vector3 (3f, -2f, 0f);    
+		Main.myHand.getCards().Add(new Card(Instantiate (notInstantiateMaJiang), maJiangId / 4));  
 	}
 
 	void initMyPlayer(int[] hand) {
 		// 启用假的牌
 		hand = new int[]{10, 11, 1, 0, 9, 22, 9, 10, 11, 1, 0, 9, 22, 9, 10, 11};
-		List<Card> cards = Main.myHand.getCards();
-		for (int i = 0; i < 16; i++) {
-//			cards.Add(new Card(Resources.Load (hand[i].ToString()) as GameObject, hand[i]));
-			GameObject maJiang = Resources.Load ("1") as GameObject;
+//		hand = new int[]{10};
+		List<Card> cards = new List<Card>();
+		for (int i = 0; i < hand.Length; i++) {
+			GameObject maJiang = Instantiate (Resources.Load (hand[i].ToString()) as GameObject);
 			cards.Add(new Card(maJiang, hand[i]));
-			Instantiate (cards[i].getMaJiang());
 		}
-//		Main.myHand.reorder();
-		Main.myHand.reposition();
-		for (int i = 0; i < 16; i++) {  }			
+		Main.myHand.setCards (cards);
+		Main.myHand.reorder();
+
 		//	float startPositionX = -2.7f;
 		//	float startPositionY = -2f;
 		//	for (int i = 0; i < 16; i++) {

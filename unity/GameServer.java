@@ -226,14 +226,17 @@ public class GameServer {
 						}
 						case "STATUS" : {
 							System.out.println("STATUS");
-							if (nowPlayer == 0) {
-								printWriter.println("YOUR TURN");
-								System.out.println("YOUR TURN");
-							} else {
-								printWriter.println("EAST POST");
-								System.out.println("EAST POST");
-							}
-							nowPlayer = (nowPlayer + 1) % 4;
+//							if (nowPlayer == 0) {
+//								printWriter.println("YOUR TURN"); // 传到c#后，末尾会多/n
+//								System.out.println("YOUR TURN");
+//							} else {
+//								printWriter.println("EAST POST");
+//								System.out.println("EAST POST");
+//							}
+//							nowPlayer = (nowPlayer + 1) % 4;
+							
+							printWriter.println("EAST POST,40");
+							System.out.println("EAST POST,40");
 							break;	
 						}
 						case "PLAY CARD" : {

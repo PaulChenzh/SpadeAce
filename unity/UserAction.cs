@@ -15,27 +15,28 @@ public class UserAction : MonoBehaviour {
 
 	public UserAction(int cardId) {
 		if (isChiable(cardId)) { actions.Add (Resources.Load ("chi") as GameObject); }
-		if (isPengable(cardId)) { actions.Add (Resources.Load ("peng") as GameObject); } 
-		if (isGangable(cardId)) { actions.Add (Resources.Load ("gang") as GameObject); }
-		if (isHuable(cardId)) { actions.Add (Resources.Load ("hu") as GameObject); }
+//		if (isPengable(cardId)) { actions.Add (Resources.Load ("peng") as GameObject); } 
+//		if (isGangable(cardId)) { actions.Add (Resources.Load ("gang") as GameObject); }
+//		if (isHuable(cardId)) { actions.Add (Resources.Load ("hu") as GameObject); }
 	}
 
 	private Boolean isChiable(int cardId) {
+		Debug.Log("isChiable " + cardId + "!!!!!!!!!!!!!!!!!!!");
 		List<Card> tempList = new List<Card> ();
 		int cardGroup = cardId / 9;
 		int cardNumber = cardId % 9;
 		Boolean[] isExist = new Boolean[9];
 		for (int i = cards.Count - 1; i >= 0; i--) {
-			int otherCardId = cards [i].getMaJiangId () / 4;
+			int otherCardId = cards [i].getMaJiangId ();
 			int otherGroup = otherCardId / 9;
 			if (cardGroup == otherGroup) {
-				isExist [cardNumber] = true;
+				isExist [otherCardId % 9] = true;
 				tempList.Add (cards [i]);
 			}
 		}
 
 		for (int i = tempList.Count - 1; i >= 0; i--) {
-			int number = (tempList [i].getMaJiangId () / 4) % 9;
+			int number = (tempList [i].getMaJiangId ()) % 9;
 			if (number < cardNumber) {
 				if (number == cardNumber - 2 && number >= 0 && isExist [cardNumber - 1])
 					return true;

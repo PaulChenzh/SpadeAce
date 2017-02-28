@@ -4,15 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Hand {
-	private List<Card> cards = new List<Card>();
+public class Hand{
+	private List<Card> cards;
 
 	public List<Card> getCards() {
 		return cards;
 	}
 
+	public void setCards(List<Card> cards) {
+		this.cards = cards;
+	}
+
 	public void reorder() {
-		Debug.Log(cards.Count);  
+		Debug.Log (cards.Count + "~~~~~~"); 
 		Card[] tempHand = new Card[cards.Count];
 		for (int i = cards.Count - 1; i >= 0; i --) { 
 			tempHand[i] = cards[i]; 
@@ -20,22 +24,22 @@ public class Hand {
 		Card tempCard;
 		for (int i = 0; i < cards.Count - 1; i ++) {
 			for (int j = i + 1; j < cards.Count; j ++) {
-				if (tempHand[i].getMaJiangId() > tempHand[j].getMaJiangId()) {
+				if (tempHand[i].getMaJiangId() < tempHand[j].getMaJiangId()) {
 					tempCard = tempHand[i]; tempHand[i] = tempHand[j]; tempHand[j] = tempCard;
 				}
 			}
 		}
+//		cards = tempHand;
 		cards = new List<Card>();
 		for (int i = 0; i < tempHand.Length; i ++) { cards.Add(tempHand[i]); }
 		reposition();
 	}
 
 	public void reposition() {
-		Debug.Log("reposition");  
+		Debug.Log("reposition");
 		float startPositionX = 2.58f;
 		float startPositionY = -2f;
 		for (int i = 0; i < cards.Count; i++) {
-			Debug.Log (cards.Count); 
 			cards[i].getMaJiang().transform.position = new Vector3 (startPositionX - i * 0.33f, startPositionY, 0f);
 		}
 	}
