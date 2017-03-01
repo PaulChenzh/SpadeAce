@@ -11,6 +11,7 @@ public class ChiEvent : MonoBehaviour {
 	void Update () {}
 
 	void OnMouseDown() {
+		Debug.Log("this is chi event!!");
 		if (Main.isChing) {
 			Main.isChing = false;
 			// 使“吃”变亮

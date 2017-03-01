@@ -9,6 +9,8 @@ public class Main : MonoBehaviour {
 	public static Boolean isMyTurn = false;
 	public static Boolean isPlayed = false;
 	public static Boolean isGetACard = false;
+	public static Boolean isActioned = false;
+	public static String actionCode = "";
 
 	public static int jin;
 	public static Boolean isChing = false;

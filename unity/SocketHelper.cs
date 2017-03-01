@@ -76,11 +76,22 @@ public class SocketHelper : MonoBehaviour {
 				//if (Main.myHand.isActionable(cardId)) { 
 				//	Main.myHand.getActions(cardId);
 				//}
-				int spliter = returnMsgStr.IndexOf(',');
-				String cardIdStr = returnMsgStr.Substring (spliter + 1, returnMsgStr.Length - spliter - 1);
-				int cardId = int.Parse(cardIdStr); //这个参数是从returnMsg来的
-				Main.userAction = new UserAction(cardId / 4);
-				Main.userAction.showAction();
+				if (Main.isActioned) { // TODO
+					string action = "ACTION," + Main.actionCode + "," + Main.currentMaJiangid + "," + Main.myHand + "\r\n";
+					// 这里需要设计一下 ，看看怎么验证和交互，draft版本是：ACTION,PENG,MAJIANGID,HAND
+					message = Encoding.ASCII.GetBytes(action);
+					socket.Send(message, message.Length, SocketFlags.None);
+
+					// 与服务器交互成功以后 
+					Main.isActioned = false;
+					Main.actionCode = "";
+				} else {
+					int spliter = returnMsgStr.IndexOf(',');
+					String cardIdStr = returnMsgStr.Substring (spliter + 1, returnMsgStr.Length - spliter - 1);
+					int cardId = int.Parse(cardIdStr); //这个参数是从returnMsg来的
+					Main.userAction = new UserAction(cardId / 4);
+					Main.userAction.showAction();
+				}
 			} else {
 				// 其他家的逻辑再说
 			} 
@@ -95,7 +106,7 @@ public class SocketHelper : MonoBehaviour {
 
 	void initMyPlayer(int[] hand) {
 		// 启用假的牌
-		hand = new int[]{10, 11, 1, 0, 9, 22, 9, 10, 11, 1, 0, 9, 22, 9, 10, 11};
+		hand = new int[]{10, 11, 1, 0, 9, 22, 9, 10, 11, 0, 0, 9, 22, 9, 10, 11};
 //		hand = new int[]{10};
 		List<Card> cards = new List<Card>();
 		for (int i = 0; i < hand.Length; i++) {
@@ -104,27 +115,6 @@ public class SocketHelper : MonoBehaviour {
 		}
 		Main.myHand.setCards (cards);
 		Main.myHand.reorder();
-
-		//	float startPositionX = -2.7f;
-		//	float startPositionY = -2f;
-		//	for (int i = 0; i < 16; i++) {
-		//		GameObject maJiang;
-		//		// 这段逻辑在所有牌全部设计出来后,将会替换成
-		//		/*
-		//		String cardName = String.Parse(hand [i] / 4);
-		//		maJiang = Resources.Load ("cardName") as GameObject;
-		//		*/
-		//		if (hand [i] % 4 == 1) { 
-		//			maJiang = Resources.Load ("w1InHand") as GameObject;
-		//		} else if (hand [i] % 4 == 2) {
-		//			maJiang = Resources.Load ("w2InHand") as GameObject;
-		//		} else {
-		//			maJiang = Resources.Load ("otherInHand") as GameObject;
-		//		}
-		//		maJiang.transform.position = new Vector3 (startPositionX + i * 0.33f, startPositionY, 0f); 
-		//		Instantiate (maJiang);	
-		//		
-		//	}
 	}
 
 	void initLeftPlayer() {
@@ -232,7 +222,8 @@ public class SocketHelper : MonoBehaviour {
 					int receiceDataSize = socket.Receive(receive);
 					String receiveData = Encoding.ASCII.GetString(receive, 0, receiceDataSize);
 					Debug.Log(receiveData); 
-					Main.jin = int.Parse(receiveData);
+//					Main.jin = int.Parse(receiveData) / 4;
+					Main.jin = 1; // 假金，测试用
 
 					receive = new byte[1024]; // 如果有金，获取金 
 					receiceDataSize = socket.Receive(receive);

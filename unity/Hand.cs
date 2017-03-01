@@ -29,7 +29,6 @@ public class Hand{
 				}
 			}
 		}
-//		cards = tempHand;
 		cards = new List<Card>();
 		for (int i = 0; i < tempHand.Length; i ++) { cards.Add(tempHand[i]); }
 		reposition();

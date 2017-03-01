@@ -10,14 +10,13 @@ public class UserAction : MonoBehaviour {
 	private Boolean used = false;
 	private int[] jin = new int[4];
 
-	private Boolean isVerse = false;
 	private int startPosition; 
 
 	public UserAction(int cardId) {
 		if (isChiable(cardId)) { actions.Add (Resources.Load ("chi") as GameObject); }
-//		if (isPengable(cardId)) { actions.Add (Resources.Load ("peng") as GameObject); } 
-//		if (isGangable(cardId)) { actions.Add (Resources.Load ("gang") as GameObject); }
-//		if (isHuable(cardId)) { actions.Add (Resources.Load ("hu") as GameObject); }
+		if (isPengable(cardId)) { actions.Add (Resources.Load ("peng") as GameObject); } 
+		if (isGangable(cardId)) { actions.Add (Resources.Load ("gang") as GameObject); }
+		if (isHuable(cardId)) { actions.Add (Resources.Load ("hu") as GameObject); }
 	}
 
 	private Boolean isChiable(int cardId) {
@@ -59,13 +58,17 @@ public class UserAction : MonoBehaviour {
 	private Boolean isHuable(int cardId) {
 		List<Card> cards = Main.myHand.getCards();
 		int[][] paixing = new int[4][];
-
+		for (int i = 0; i < 4; i++) {
+			paixing [i] = new int[11];
+		}
 		for (int i = 0; i < cards.Count; i++) {
 			Card card = cards [i];
 			int id = card.getMaJiangId(); // 这里的id也是0~35
+
 			paixing[id / 9][id % 9] ++;
 		}
 		paixing [cardId / 9] [cardId % 9]++;
+		Debug.Log("!!!" + Main.jin );
 		int jinCount = paixing [Main.jin / 9] [Main.jin % 9];
 		paixing [Main.jin / 9] [Main.jin % 9] = 0;
 
@@ -240,17 +243,16 @@ public class UserAction : MonoBehaviour {
 		for (int i = 0; i < cards.Count; i ++) {
 			if (cards[i].getMaJiangId() == cardId) count ++;
 		}
-		return count = 0;
+		return count;
 	}
 
 	public void showAction() {
-		float startPositionX = 2f - 0.25f * actions.Count; // 暂定一个action的图标宽度是50＊50
+		float logoSize = 0.88f;
+		float startPositionX = 2f - logoSize / 2 * actions.Count; // 暂定一个action的图标宽度是50＊50
 		float startPositionY = -1f;
 		for (int i = 0; i < actions.Count; i++) {
-			actions[i].transform.position = new Vector3 (startPositionX - 0.5f * i, startPositionY, 0f);
+			actions[i].transform.position = new Vector3 (startPositionX - logoSize * i, startPositionY, 0f);
 			Instantiate (actions [i]);
 		}
 	}
-
-
 }
