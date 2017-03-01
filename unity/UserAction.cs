@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserAction : MonoBehaviour {
+// TODO 6 有一个问题需要商榷，要统一每张牌传过来的id,应该在0~35之间
+public class UserAction : MonoBehaviour { 
 	List<GameObject> actions = new List<GameObject> ();
 	List<Card> cards = Main.myHand.getCards();
 
@@ -19,8 +20,17 @@ public class UserAction : MonoBehaviour {
 		if (isHuable(cardId)) { actions.Add (Resources.Load ("hu") as GameObject); }
 	}
 
+	public void showAction() {
+		float logoSize = 0.88f; // TODO 5 这个地方需要获取动作图片的长和宽 
+		float startPositionX = 2f - logoSize / 2 * actions.Count; // 暂定一个action的图标宽度是88＊88
+		float startPositionY = -1f;
+		for (int i = 0; i < actions.Count; i++) {
+			actions[i].transform.position = new Vector3 (startPositionX - logoSize * i, startPositionY, 0f);
+			Instantiate (actions [i]);
+		}
+	}
+
 	private Boolean isChiable(int cardId) {
-		Debug.Log("isChiable " + cardId + "!!!!!!!!!!!!!!!!!!!");
 		List<Card> tempList = new List<Card> ();
 		int cardGroup = cardId / 9;
 		int cardNumber = cardId % 9;
@@ -34,7 +44,7 @@ public class UserAction : MonoBehaviour {
 			}
 		}
 
-		for (int i = tempList.Count - 1; i >= 0; i--) {
+		for (int i = tempList.Count - 1; i >= 0; i--) { // TODO 7 这里要区分，大牌一组的话，没有吃的操作
 			int number = (tempList [i].getMaJiangId ()) % 9;
 			if (number < cardNumber) {
 				if (number == cardNumber - 2 && number >= 0 && isExist [cardNumber - 1])
@@ -53,6 +63,25 @@ public class UserAction : MonoBehaviour {
 			}
 		}
 		return false;
+	}
+	
+	private Boolean isPengable(int cardId) {
+		if (getCardNumber(cardId) >= 2) return true;
+		return false;
+	}
+
+	private Boolean isGangable(int cardId) {
+		if (getCardNumber(cardId) == 3) return true;
+		return false;
+	}
+		
+	private int getCardNumber(int cardId) {
+		int count = 0;
+		List<Card> cards = Main.myHand.getCards();
+		for (int i = 0; i < cards.Count; i ++) {
+			if (cards[i].getMaJiangId() == cardId) count ++;
+		}
+		return count;
 	}
 		
 	private Boolean isHuable(int cardId) {
@@ -225,34 +254,5 @@ public class UserAction : MonoBehaviour {
 			return ans;
 		}
 		return false;
-	}
-
-	private Boolean isPengable(int cardId) {
-		if (getCardNumber(cardId) >= 2) return true;
-		return false;
-	}
-
-	private Boolean isGangable(int cardId) {
-		if (getCardNumber(cardId) == 3) return true;
-		return false;
-	}
-
-	private int getCardNumber(int cardId) {
-		int count = 0;
-		List<Card> cards = Main.myHand.getCards();
-		for (int i = 0; i < cards.Count; i ++) {
-			if (cards[i].getMaJiangId() == cardId) count ++;
-		}
-		return count;
-	}
-
-	public void showAction() {
-		float logoSize = 0.88f;
-		float startPositionX = 2f - logoSize / 2 * actions.Count; // 暂定一个action的图标宽度是50＊50
-		float startPositionY = -1f;
-		for (int i = 0; i < actions.Count; i++) {
-			actions[i].transform.position = new Vector3 (startPositionX - logoSize * i, startPositionY, 0f);
-			Instantiate (actions [i]);
-		}
 	}
 }

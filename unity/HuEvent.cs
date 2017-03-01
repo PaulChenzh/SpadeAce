@@ -7,8 +7,16 @@ public class HuEvent : MonoBehaviour {
 	void Start () {}
 	void Update () {}
 
-	void OnMouseDown() { // 图标隐藏，读秒隐藏，计算盘数
-		Main.isActioned = true;
+	void OnMouseDown() { 
+		Debug.Log("Start HuEvent...");
+		// TODO 12
+		// 隐藏胡的图标
+		// 读秒隐藏
+		// 出现胡的效果
+		// 计算盘数
+		// 显示胜利结果
 		Main.actionCode = "HU";
+		Main.isActioned = true;
+		Debug.Log("End HuEvent.");
 	}
 }

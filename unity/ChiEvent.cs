@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,16 +11,21 @@ public class ChiEvent : MonoBehaviour {
 	void Update () {}
 
 	void OnMouseDown() {
-		Debug.Log("this is chi event!!");
+		Debug.Log("Start ChiEvent...");
+		
 		if (Main.isChing) {
 			Main.isChing = false;
+			// TODO 17
 			// 使“吃”变亮
 			// 将所有麻将变亮，且重新启用他们的事件
+			Main.actionCode = "CHI";
+			Main.isActioned = true;
 		} else {
+			// TODO 18
 			// 使“吃”变灰
 			// 将与该次“吃”动作无关的麻将牌变暗，且禁止他们的事件
 
-			// 选取其中无关麻将
+			// TODO 19 选取其中无关麻将
 			List<Card> cards = getUnrelatedMaJiang(Main.myHand.getCards(), Main.currentMaJiangid);
 			foreach (Card card in cards) {
 				MaJiangEvent maJiangEvent = card.getMaJiang().GetComponentInParent<MaJiangEvent>();
@@ -32,8 +37,11 @@ public class ChiEvent : MonoBehaviour {
 			}
 			Main.isChing = true;
 		}
+		
+		Debug.Log("End ChiEvent.");
 	}
 
+	// TODO 20 看看这段代码需不需要移除，或者怎么改写
 	// 获得与“吃”无关的牌
 	private List<Card> getUnrelatedMaJiang(List<Card> maJiangs, int currentMaJiang) {
 		List<Card> tempList = new List<Card>();
