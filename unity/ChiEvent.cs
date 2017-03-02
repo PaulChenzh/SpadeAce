@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,21 +21,43 @@ public class ChiEvent : MonoBehaviour {
 				}
 			}
 			Main.isChing = false;
-			// TODO 17
+			// TODO 1
 			// 去掉吃的亮边
-			if (Main.chi1 >= 0 && Main.chi2 >= 0) {
+			if (Main.chiSmall != null && Main.chiBig != null) { // 已经有选中的牌，进行吃操作
+				for (int i = Main.actions.count - 1; i >= 0; i ++) { // 将Action图标隐藏
+					Main.actions[i].SetActive (false);
+				}
+				Main.actions = new List<GameObject> (); // 重置所有Action
+				Main.chiSmall.getMaJiang().SetActive (false); // 使这张牌在画布消失
+				Main.chiBig.getMaJiang().SetActive (false); // 使这张牌在画布消失
+				List<Card> cards = Main.myHand.getCards();
+				for (int i = cards.count - 1; i >= 0; i ++) { // 将选中的牌从手牌移出
+					if (cards[i].Equals(chiBig)) {
+						cards.remove(i);
+					}
+					if (cards[i].Equals(chiSmall)) {
+						cards.remove(i);
+					}
+				}
+				// TODO 2 执行吃的动画效果
+					// 中间显示吃+吃完的顺
+					// 将该吃放在手牌左边
+				cards.RemoveAt (i); // 将这张牌移出手牌
+				myHand.Reorder (); // 重排手牌
+				
+				Main.chiSmal = null;
+				Main.chiBig = null;
 				Main.actionCode = "CHI";
 				Main.isActioned = true;
 			}
 		} else {
-			// TODO 19 选取其中无关麻将
 			foreach (Card card in Main.chiRelateds) {
 				MaJiangEvent maJiangEvent = card.getMaJiang().GetComponentInParent<MaJiangEvent>();
 				if( maJiangEvent != null ) {
 					maJiangEvent.StopAllCoroutines(); // 将与该次“吃”动作无关的麻将，禁止他们的事件
 				}
 			}
-			// TODO 18
+			// TODO 3
 			// 给“吃”加个亮边
 			Main.isChing = true;
 		}
