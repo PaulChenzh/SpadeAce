@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +19,9 @@ public class Main : MonoBehaviour {
 	public static Boolean isHuing = false;
 	public static int currentMaJiangid;
 	public static Hand myHand = new Hand();
+	public static List<Card> chiRelateds;
+	public static int chi1 = -1;
+	public static int chi2 = -1;
 	public static UserAction userAction;
 
 	void Start () {

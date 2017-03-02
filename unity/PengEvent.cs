@@ -23,7 +23,7 @@ public class PengEvent : MonoBehaviour {
 		// 隐藏碰的图标
 		// 读秒隐藏
 		// 出现碰的效果
-			// 等待碰的效果结束，将所杠放置在左手边，用used的牌的图片
+		// 等待碰的效果结束，将所杠放置在左手边，用used的牌的图片
 		Main.actionCode = "PENG";
 		Main.isActioned = true; // 所有事情做完之后，开启碰动作开关
 		Debug.Log("End PengEvent.");

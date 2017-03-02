@@ -1,4 +1,4 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +22,7 @@ public class SocketHelper : MonoBehaviour {
 			Debug.Log("This is my turn now!");
 			// TODO 3
 			// 计时器开始计时
-				// 计时器要做到每秒改变一次时间
+			// 计时器要做到每秒改变一次时间
 			if (!Main.isGetACard) { // 还没发牌，则执行发牌
 				Debug.Log("正在发牌...");
 				string status = "Draw A Card\r\n"; // 请求发牌
@@ -85,7 +85,7 @@ public class SocketHelper : MonoBehaviour {
 				} else { // 判断能否执行动作
 					// TODO 9
 					// 这里需要一个计时器，大概给3秒钟的时间，让大家可以比较从容操作（这个计时器是不可见的）
-						// 如果这个时钟已经出现，则不执行
+					// 如果这个时钟已经出现，则不执行
 					int spliter = returnMsgStr.IndexOf(',');
 					String cardIdStr = returnMsgStr.Substring (spliter + 1, returnMsgStr.Length - spliter - 1);
 					int cardId = int.Parse(cardIdStr); //这个参数是从returnMsg来的
@@ -224,7 +224,7 @@ public class SocketHelper : MonoBehaviour {
 					int receiceDataSize = socket.Receive(receive);
 					String receiveData = Encoding.ASCII.GetString(receive, 0, receiceDataSize);
 					Debug.Log(receiveData); 
-//					Main.jin = int.Parse(receiveData) / 4;
+					//					Main.jin = int.Parse(receiveData) / 4;
 					Main.jin = 1; // 假金，测试用
 
 					receive = new byte[1024];

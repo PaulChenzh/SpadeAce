@@ -33,6 +33,7 @@ public class UserAction : MonoBehaviour {
 	private Boolean isChiable(int cardId) {
 		List<Card> tempList = new List<Card> ();
 		int cardGroup = cardId / 9;
+		if (cardGroup == Card.FENG) return false;
 		int cardNumber = cardId % 9;
 		Boolean[] isExist = new Boolean[9];
 		for (int i = cards.Count - 1; i >= 0; i--) {
@@ -44,7 +45,7 @@ public class UserAction : MonoBehaviour {
 			}
 		}
 
-		for (int i = tempList.Count - 1; i >= 0; i--) { // TODO 7 这里要区分，大牌一组的话，没有吃的操作
+		for (int i = tempList.Count - 1; i >= 0; i--) {
 			int number = (tempList [i].getMaJiangId ()) % 9;
 			if (number < cardNumber) {
 				if (number == cardNumber - 2 && number >= 0 && isExist [cardNumber - 1])
@@ -64,7 +65,7 @@ public class UserAction : MonoBehaviour {
 		}
 		return false;
 	}
-	
+
 	private Boolean isPengable(int cardId) {
 		if (getCardNumber(cardId) >= 2) return true;
 		return false;
@@ -74,7 +75,7 @@ public class UserAction : MonoBehaviour {
 		if (getCardNumber(cardId) == 3) return true;
 		return false;
 	}
-		
+
 	private int getCardNumber(int cardId) {
 		int count = 0;
 		List<Card> cards = Main.myHand.getCards();
@@ -83,7 +84,7 @@ public class UserAction : MonoBehaviour {
 		}
 		return count;
 	}
-		
+
 	private Boolean isHuable(int cardId) {
 		List<Card> cards = Main.myHand.getCards();
 		int[][] paixing = new int[4][];
@@ -92,7 +93,7 @@ public class UserAction : MonoBehaviour {
 		}
 		for (int i = 0; i < cards.Count; i++) {
 			Card card = cards [i];
-			int id = card.getMaJiangId(); // 这里的id也是0~35
+			int id = card.getMaJiangId(); 
 
 			paixing[id / 9][id % 9] ++;
 		}
