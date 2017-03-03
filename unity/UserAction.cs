@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,19 +9,19 @@ public class UserAction : MonoBehaviour {
 	private int[] jin = new int[4];
 
 	private int startPosition; 
-	
+
 	public UserAction(int cardId) {
 		if (isChiable(cardId)) { Main.actions.Add (Resources.Load ("chi") as GameObject); }
 		if (isPengable(cardId)) { Main.actions.Add (Resources.Load ("peng") as GameObject); } 
 		if (isGangable(cardId)) { Main.actions.Add (Resources.Load ("gang") as GameObject); }
- 		if (isHuable(cardId)) { Main.actions.Add (Resources.Load ("hu") as GameObject); }
+		if (isHuable(cardId)) { Main.actions.Add (Resources.Load ("hu") as GameObject); }
 	}
 
 	public void showAction() {
 		float logoSize = 0.88f; // TODO - POSTPONE - 这个地方需要获取动作图片的长和宽,需要去UI联调 
-		float startPositionX = 2f - logoSize / 2 * actions.Count; // 暂定一个action的图标宽度是88＊88
+		float startPositionX = 2f - logoSize / 2 * Main.actions.Count; // 暂定一个action的图标宽度是88＊88
 		float startPositionY = -1f;
-		for (int i = 0; i < actions.Count; i++) {
+		for (int i = 0; i < Main.actions.Count; i++) {
 			Main.actions[i].transform.position = new Vector3 (startPositionX - logoSize * i, startPositionY, 0f);
 			Main.actions[i] = Instantiate (Main.actions[i]);
 		}
@@ -44,6 +44,43 @@ public class UserAction : MonoBehaviour {
 			if (cards[i].getMaJiangId() == cardId) count ++;
 		}
 		return count;
+	}
+
+	private Boolean isChiable(int cardId) {
+		List<Card> tempList = new List<Card> ();
+		int cardGroup = cardId / 9;
+		if (cardGroup == Card.FENG) return false;
+		int cardNumber = cardId % 9;
+		Boolean[] isExist = new Boolean[9];
+		List<Card> cards = Main.myHand.getCards ();
+		for (int i = cards.Count - 1; i >= 0; i--) {
+			int otherCardId = cards [i].getMaJiangId ();
+			int otherGroup = otherCardId / 9;
+			if (cardGroup == otherGroup) {
+				isExist [otherCardId % 9] = true;
+				tempList.Add (cards [i]);
+			}
+		}
+
+		for (int i = tempList.Count - 1; i >= 0; i--) {
+			int number = (tempList [i].getMaJiangId ()) % 9;
+			if (number < cardNumber) {
+				if (number == cardNumber - 2 && number >= 0 && isExist [cardNumber - 1])
+					return true;
+				if (number == cardNumber - 1 && number >= 0 && cardNumber + 1 <= 8 && isExist [cardNumber + 1])
+					return true;
+				if (number == cardNumber - 1 && number >= 0 && cardNumber - 2 >= 0 && isExist [cardNumber - 2])
+					return true;
+			} else if (cardNumber > number) {
+				if (number == cardNumber + 2 && number <= 8 && isExist [cardNumber + 1])
+					return true;
+				if (number == cardNumber + 1 && number <= 8 && cardNumber + 2 <= 8 && isExist [cardNumber + 2])
+					return true;
+				if (number == cardNumber + 1 && number <= 8 && cardNumber - 1 >= 0 && isExist [cardNumber - 1])
+					return true;
+			}
+		}
+		return false;
 	}
 
 	private Boolean isHuable(int cardId) {

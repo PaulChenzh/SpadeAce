@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,11 +14,12 @@ public class MaJiangEvent : MonoBehaviour {
 	void OnMouseDown() {
 		if (Main.isChing) {
 			List<Card> cards = Main.myHand.getCards (); // 先将所有卡牌位置还原
-			for (int i = 0; i < cards.count; i ++) {
-				if (!cards[i].isInOriginalPositions) {
+			for (int i = 0; i < cards.Count; i ++) {
+				MaJiangEvent maJiangEvent = cards[i].getMaJiang().GetComponentInParent<MaJiangEvent>();
+				if (!maJiangEvent.isInOriginalPositions) {
 					Vector3 position = cards[i].getMaJiang().transform.position;
 					cards[i].getMaJiang().transform.position = new Vector3 (position.x, position.y - 0.2f, 0f);
-					cards[i].getMaJiang().isInOriginalPositions = true;
+					maJiangEvent.isInOriginalPositions = true;
 				}
 			}
 			/**
@@ -28,52 +29,52 @@ public class MaJiangEvent : MonoBehaviour {
 				if (this.gameObject.Equals (Main.chiRelateds[i].getMaJiang())) {
 					int dis = Main.chiRelateds [i].getMaJiangId() - Main.currentMaJiangid;
 					if (dis == -2) {
-						chiSmall = Main.chiRelateds [i];
+						Main.chiSmall = Main.chiRelateds [i];
 						for (int j = i + 1; j < Main.chiRelateds.Count; j ++) {
 							if (Main.chiRelateds [j].getMaJiangId() - Main.currentMaJiangid == -1) {
-								chiBig = Main.chiRelateds [j];
+								Main.chiBig = Main.chiRelateds [j];
 								break;
 							}
 						}
 					} else if (dis == -1) {
-						chiSmall = Main.chiRelateds [i];
+						Main.chiSmall = Main.chiRelateds [i];
 						for (int j = i + 1; j < Main.chiRelateds.Count; j ++) {
 							if (Main.chiRelateds [j].getMaJiangId() - Main.currentMaJiangid == 1) {
-								chiBig = Main.chiRelateds [j];
+								Main.chiBig = Main.chiRelateds [j];
 								break;
 							}
 						}
-						if (chiBig == null) {
-							chiBig = chiSmall;
+						if (Main.chiBig == null) {
+							Main.chiBig = Main.chiSmall;
 							for (int j = i - 1; j >= 0; j --) {
 								if (Main.chiRelateds [j].getMaJiangId() - Main.currentMaJiangid == -2) {
-									chiSmall = Main.chiRelateds [j];
+									Main.chiSmall = Main.chiRelateds [j];
 									break;
 								}
 							}
 						}
 					} else if (dis == 1) {
-						chiSmall = Main.chiRelateds [i];
+						Main.chiSmall = Main.chiRelateds [i];
 						for (int j = i + 1; j < Main.chiRelateds.Count; j ++) {
 							if (Main.chiRelateds [j].getMaJiangId() - Main.currentMaJiangid == 2) {
-								chiBig = Main.chiRelateds [j];
+								Main.chiBig = Main.chiRelateds [j];
 								break;
 							}
 						}
-						if (chiBig == null) {
-							chiBig = chiSmall;
+						if (Main.chiBig == null) {
+							Main.chiBig = Main.chiSmall;
 							for (int j = i - 1; j >= 0; j --) {
 								if (Main.chiRelateds [j].getMaJiangId() - Main.currentMaJiangid == -1) {
-									chiSmall = Main.chiRelateds [j];
+									Main.chiSmall = Main.chiRelateds [j];
 									break;
 								}
 							}
 						}
 					} else if (dis == 2) {
-						chiSmall = Main.chiRelateds [i];
+						Main.chiSmall = Main.chiRelateds [i];
 						for (int j = i + 1; j < Main.chiRelateds.Count; j ++) {
 							if (Main.chiRelateds [j].getMaJiangId() - Main.currentMaJiangid == 1) {
-								chiBig = Main.chiRelateds [j];
+								Main.chiBig = Main.chiRelateds [j];
 								break;
 							}
 						}
@@ -81,15 +82,15 @@ public class MaJiangEvent : MonoBehaviour {
 				}
 			}
 			// 将这两张牌选中
-			Vector3 position = chiSmall.getMaJiang().transform.position; 
-			chiSmall.getMaJiang().transform.position = new Vector3 (position.x, position.y + 0.2f, 0f);
-			chiSmall.isInOriginalPositions = true;
-			Vector3 position = chiBig.getMaJiang().transform.position;
-			chiBig.getMaJiang().transform.position = new Vector3 (position.x, position.y + 0.2f, 0f);
-			chiBig.isInOriginalPositions = true;
+			Vector3 pos= Main.chiSmall.getMaJiang().transform.position; 
+			Main.chiSmall.getMaJiang().transform.position = new Vector3 (pos.x, pos.y + 0.2f, 0f);
+			Main.chiSmall.getMaJiang().GetComponentInParent<MaJiangEvent>().isInOriginalPositions = true;
+			pos = Main.chiBig.getMaJiang().transform.position;
+			Main.chiBig.getMaJiang().transform.position = new Vector3 (pos.x, pos.y + 0.2f, 0f);
+			Main.chiBig.getMaJiang().GetComponentInParent<MaJiangEvent>().isInOriginalPositions = true;
 		} else {
 			List<Card> cards = Main.myHand.getCards ();
-			for (int i = cards.Length; i >= 0; i--) {
+			for (int i = cards.Count; i >= 0; i--) {
 				GameObject aObject = cards [i].getMaJiang ();
 				if (this.gameObject.Equals (aObject)) {
 					Vector3 position = this.gameObject.transform.position;
@@ -98,14 +99,14 @@ public class MaJiangEvent : MonoBehaviour {
 						this.isInOriginalPositions = false;
 					} else {
 						if (Main.isMyTurn && !Main.isPlayed) { // 双击出牌
-							Main.currentMaJiangid = aObject.getMaJiangId(); // 将现在的牌置为打出牌
+							Main.currentMaJiangid = cards [i].getMaJiangId(); // 将现在的牌置为打出牌
 							this.gameObject.SetActive (false); // 使这张牌在画布消失
 							// TODO 1
 							// 出现打出这张牌的效果（比如打出去的动画+放大显示在前面一秒)
 							// 该牌放置在自己的打出牌堆
-							
+
 							cards.RemoveAt (i); // 将这张牌移出手牌
-							myHand.Reorder (); // 重排手牌
+							Main.myHand.reorder (); // 重排手牌
 							Main.isPlayed = true;
 							break;
 						} else {

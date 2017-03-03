@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,35 +17,34 @@ public class ChiEvent : MonoBehaviour {
 			foreach (Card card in Main.chiRelateds) {
 				MaJiangEvent maJiangEvent = card.getMaJiang().GetComponentInParent<MaJiangEvent>();
 				if( maJiangEvent != null ) {
-					maJiangEvent.StartCoroutine(); // 开启事件
+//					maJiangEvent.; // 开启事件
 				}
 			}
 			Main.isChing = false;
 			// TODO 1
 			// 去掉吃的亮边
 			if (Main.chiSmall != null && Main.chiBig != null) { // 已经有选中的牌，进行吃操作
-				for (int i = Main.actions.count - 1; i >= 0; i ++) { // 将Action图标隐藏
+				for (int i = Main.actions.Count - 1; i >= 0; i ++) { // 将Action图标隐藏
 					Main.actions[i].SetActive (false);
 				}
 				Main.actions = new List<GameObject> (); // 重置所有Action
 				Main.chiSmall.getMaJiang().SetActive (false); // 使这张牌在画布消失
 				Main.chiBig.getMaJiang().SetActive (false); // 使这张牌在画布消失
 				List<Card> cards = Main.myHand.getCards();
-				for (int i = cards.count - 1; i >= 0; i ++) { // 将选中的牌从手牌移出
-					if (cards[i].Equals(chiBig)) {
-						cards.remove(i);
+				for (int i = cards.Count - 1; i >= 0; i ++) { // 将选中的牌从手牌移出
+					if (cards[i].Equals(Main.chiBig)) {
+						cards.RemoveAt(i);
 					}
-					if (cards[i].Equals(chiSmall)) {
-						cards.remove(i);
+					if (cards[i].Equals(Main.chiSmall)) {
+						cards.RemoveAt(i);
 					}
 				}
 				// TODO 2 执行吃的动画效果
-					// 中间显示吃+吃完的顺
-					// 将该吃放在手牌左边
-				cards.RemoveAt (i); // 将这张牌移出手牌
-				myHand.Reorder (); // 重排手牌
-				
-				Main.chiSmal = null;
+				// 中间显示吃+吃完的顺
+				// 将该吃放在手牌左边
+				Main.myHand.reorder (); // 重排手牌
+
+				Main.chiSmall = null;
 				Main.chiBig = null;
 				Main.actionCode = "CHI";
 				Main.isActioned = true;

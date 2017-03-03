@@ -1,4 +1,4 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,8 +20,9 @@ public class SocketHelper : MonoBehaviour {
 	public void update() {
 		if (Main.isMyTurn) {
 			Debug.Log("This is my turn now!");
-			// TODO 4 计时器开始计时
-				// 计时器要做到每秒改变一次时间
+			// TODO 3
+			// 计时器开始计时
+			// 计时器要做到每秒改变一次时间
 			if (!Main.isGetACard) { // 还没发牌，则执行发牌
 				Debug.Log("正在发牌...");
 				string status = "Draw A Card\r\n"; // 请求发牌
@@ -37,7 +38,7 @@ public class SocketHelper : MonoBehaviour {
 				Main.isGetACard = true;
 				Debug.Log("isGetACard" + Main.isGetACard);
 			} else if (Main.isPlayed){ // 玩家打出牌了
-				string playCard = "Play Card," + Main.currentMaJiangid + "\r\n";
+				string playCard = "Play Card,40\r\n"; // TODO 4 这里需要将玩家打出的这张牌，放在这个string里面
 				byte[] message = Encoding.ASCII.GetBytes(playCard);
 				socket.Send(message, message.Length, SocketFlags.None);
 
@@ -65,14 +66,14 @@ public class SocketHelper : MonoBehaviour {
 				Main.isMyTurn = true; 
 				Debug.Log("is my turn");
 			} else if (returnMsgStr == "EAST") { // 东家回合
-				// TODO 6 摸牌效果（东家）
-				// TODO 7 计时器效果开启（东家）
+				// 摸牌效果（东家）
+				// 计时器效果开启（东家）
 			} else if (returnMsgStr.Contains("EAST POST")) { // 东家出牌
 				Debug.Log("EAST POST");
-				// TODO 8 麻将打出画面（东家）
+				// 麻将打出画面（东家）
 				if (Main.isActioned) { // 玩家可以做出反应且已经做出反应
 					string action = "ACTION," + Main.actionCode + "," + Main.currentMaJiangid + "," + Main.myHand + "\r\n";
-					// TODO 9
+					// TODO 8
 					// 这里需要设计一下 ，看看怎么验证和交互，draft版本是：ACTION,PENG,MAJIANGID,HAND
 					// 这里将玩家动作发送给服务器
 					message = Encoding.ASCII.GetBytes(action);
@@ -82,9 +83,9 @@ public class SocketHelper : MonoBehaviour {
 					Main.actionCode = "";
 					Main.isActioned = false;
 				} else { // 判断能否执行动作
-					// TODO 10
+					// TODO 9
 					// 这里需要一个计时器，大概给3秒钟的时间，让大家可以比较从容操作（这个计时器是不可见的）
-						// 如果这个时钟已经出现，则不执行
+					// 如果这个时钟已经出现，则不执行
 					int spliter = returnMsgStr.IndexOf(',');
 					String cardIdStr = returnMsgStr.Substring (spliter + 1, returnMsgStr.Length - spliter - 1);
 					int cardId = int.Parse(cardIdStr); //这个参数是从returnMsg来的
@@ -92,11 +93,11 @@ public class SocketHelper : MonoBehaviour {
 					Main.userAction.showAction(); // 将可以执行的动作的图标显示出来
 				}
 			} else if (returnMsgStr.Contains("EAST CHI")) { // 东家在做吃的动作
-				// TODO 11
+				// TODO 10
 				// 显示吃的动画（东家）
 				// 将吃完的牌放到其左手边（东家）
-			} else if (returnMsgStr.Contains("...")) ) { // TODO 12 其他家做动作
-			} else { // 其他家的逻辑再说
+			} else if (returnMsgStr.Contains("...")) { // TODO 11 其他家做动作
+			} else { // TODO 11 其他家的逻辑再说
 			} 
 		}
 	}
@@ -223,7 +224,7 @@ public class SocketHelper : MonoBehaviour {
 					int receiceDataSize = socket.Receive(receive);
 					String receiveData = Encoding.ASCII.GetString(receive, 0, receiceDataSize);
 					Debug.Log(receiveData); 
-					Main.jin = int.Parse(receiveData) / 4;
+					//					Main.jin = int.Parse(receiveData) / 4;
 					Main.jin = 1; // 假金，测试用
 
 					receive = new byte[1024];
@@ -232,7 +233,7 @@ public class SocketHelper : MonoBehaviour {
 					Debug.Log(receiveData); 
 
 					string[] ids = receiveData.Split(',');  
-					// TODO 13 这里的话，需不需要把金提出来，放在手牌最左边？还是说给它一个框？还是说在左上角或者哪里有个提示框，说金是这个。
+					// 这里的话，需不需要把金提出来，放在手牌最左边？还是说给它一个框？还是说在左上角或者哪里有个提示框，说金是这个。
 					initMyPlayer (Array.ConvertAll<string, int>(ids, s => int.Parse(s)));
 					initLeftPlayer ();
 					initRightPlayer ();
