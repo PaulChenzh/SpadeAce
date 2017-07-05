@@ -1,0 +1,16 @@
+1. 什么是Tick Data
+Tick Data本身并不神秘，就是交易所把每只股票（亦或是futures options）的active order book(就是你的委托还存在在交易所里面，但并且没有被撮合成交)里面的买、卖的单的情况发给你。
+Tickey
+
+2. HDF(Hierarchical Data Format),可以存储不同类型的图像和数码数据的文件格式，并且可以在不同类型的机器上传输，同时还有统一处理这种文件格式的函数库。
+HDF5
+
+3.kdb 是专门用于执行系统转储映像分析的实用工具
+多用于Quant
+https://www.ibm.com/developerworks/cn/aix/library/au-kdbsteps/
+
+4.深度学习
+https://zhuanlan.zhihu.com/p/24768878?refer=zhangbingyang
+
+5.AI情况调研
+http://www.sohu.com/a/138305708_465975
