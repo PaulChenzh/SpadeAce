@@ -14,3 +14,73 @@ https://zhuanlan.zhihu.com/p/24768878?refer=zhangbingyang
 
 5.AI情况调研
 http://www.sohu.com/a/138305708_465975
+
+20170706
+1.PCA 主成分分析
+https://my.oschina.net/gujianhan/blog/225241
+
+2.Deep Learning
+http://deeplearning.stanford.edu/wiki/index.php/UFLDL%E6%95%99%E7%A8%8B
+https://zhuanlan.zhihu.com/p/24768878?refer=zhangbingyang
+http://www.cnblogs.com/tornadomeet/tag/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/default.html?page=1
+
+20170707
+1.二元线性回归
+http://openclassroom.stanford.edu/MainFolder/DocumentPage.php?course=DeepLearning&doc=exercises/ex2/ex2.html
+
+2.卷积神经网络（CNN，Convolutional Neural Network）
+http://www.cnblogs.com/GarfieldEr007/p/5342906.html
+
+3.深度学习导论
+这里，先推荐一篇非常不错的文章： 《1天搞懂深度学习》，300多页的ppt，台湾李宏毅教授写的，非常棒。 不夸张地说，是我看过最系统，也最通俗易懂的，关于深度学习的文章。
+
+这是slideshare的链接： http://www.slideshare.net/tw_dsconf/ss-62245351?qid=108adce3-2c3d-4758-a830-95d0a57e46bc&amp;v=&amp;b=&amp;from_search=3
+
+作者：jacky yang
+链接：https://www.zhihu.com/question/26006703/answer/129209540
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+
+4.
+这位爱好者把151只精灵宝可梦都做成了《炉石传说》卡牌
+http://link.zhihu.com/?target=https%3A//imgur.com/a/hbNxg
+
+5.十个值得一试的开源深度学习框架
+http://www.oschina.net/news/68074/ten-worth-a-try-open-deep-learning-framework
+
+20170710
+1. TensorFlow - Github
+https://github.com/tensorflow/tensorflow
+2. TensorFlow - 中文网站
+http://www.tensorfly.cn/
+3.负载均衡器
+Nginx - 软件
+F5 - 硬件
+http://www.cnblogs.com/brookzhang/p/6600861.html
+4. 优雅降级(Graceful degradation)是指电脑，机器，电子系统或者是网络在本身大部分已经毁坏或无效的情况下还能保持有限的功能这种能力。优雅降级的目的是阻止灾难性的失败。理想情况下，有优雅降级特征的系统即使多个组件同时失效也不会引起停机。在优雅降级中，操作的效率和速度随着失效部件的增加逐渐下降。
+5.大型网站架构系列
+http://www.cnblogs.com/itfly8/p/5155983.html
+https://www.zhihu.com/topic/19570823/top-answers
+6.常用消息队列
+一般商用的容器，比如WebLogic，JBoss，都支持JMS标准，开发上很方便。但免费的比如Tomcat，Jetty等则需要使用第三方的消息中间件。本部分内容介绍常用的消息中间件（Active MQ,Rabbit MQ，Zero MQ,Kafka）以及他们的特点。
+7.Spring2.0的特性是什么？
+8.告诉你Hadoop是什么
+http://os.51cto.com/art/201207/346023.htm
+9.Hadoop开篇必读
+http://blog.fens.me/hadoop-family-roadmap/
+10.DataCastle
+秋小白
+2 人赞同了该回答
+去做DataCastle上面的竞赛题吧~
+一般都是公司在实际运作中遇到的问题，然后放到这个竞赛平台上来让专业的人解决
+在做竞赛中才能知道哪些需要更多的补充
+11.开源机器学习框架
+http://www.dataguru.cn/thread-601710-1-1.html
+12.CTR（Click-Through-Rate）即点击通过率，是互联网广告常用的术语，指网络广告（图片广告/文字广告/关键词广告/排名广告/视频广告等）的点击到达率，即该广告的实际点击次数（严格的来说，可以是到达目标页面的数量）除以广告的展现量（Show content）。
+13.机器学习面试的那些事儿
+https://zhuanlan.zhihu.com/p/22387312
+14.机器学习面试
+https://www.zhihu.com/question/23259302
+15.从0开始TensorFlow
+https://www.leiphone.com/news/201606/ORlQ7uK3TIW8xVGF.html
