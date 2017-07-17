@@ -84,3 +84,110 @@ https://zhuanlan.zhihu.com/p/22387312
 https://www.zhihu.com/question/23259302
 15.从0开始TensorFlow
 https://www.leiphone.com/news/201606/ORlQ7uK3TIW8xVGF.html
+
+20170711
+1.round-robin 轮询调度
+2.显式分布式架构
+3.kafka
+http://blog.jobbole.com/75328/
+https://zhuanlan.zhihu.com/p/25212966
+http://www.cnblogs.com/likehua/p/3999538.html
+Kafka是一种高吞吐量的分布式发布订阅消息系统，它可以处理消费者规模的网站中的所有动作流数据。 这种动作（网页浏览，搜索和其他用户的行动）是在现代网络上的许多社会功能的一个关键因素。 这些数据通常是由于吞吐量的要求而通过处理日志和日志聚合来解决。 对于像Hadoop的一样的日志数据和离线分析系统，但又要求实时处理的限制，这是一个可行的解决方案。Kafka的目的是通过Hadoop的并行加载机制来统一线上和离线的消息处理，也是为了通过集群来提供实时的消费。
+-- what is Kafka
+Kafka是可靠的分布式日志存储服务。
+用简单的话来说，你可以把Kafka当作可顺序写入的一大卷磁带， 可以随时倒带，快进到某个时间点重放。
+作者：傅理
+链接：https://www.zhihu.com/question/22480085/answer/135092014
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+Kafka的特征如下：
+
+高写入速度：Kafka能以超过1Gbps NIC的速度写这盘磁带（实际可以到SATA 3速度，参考Benchmarking Apache Kafka: 2 Million Writes Per Second (On Three Cheap Machines)
+)，充分利用了磁盘的物理特性，即，随机写入慢（磁头冲停），顺序写入快（磁头悬浮）。
+
+高可靠性： 通过zookeeper做分布式一致性，同步到任意多块磁盘上，故障自动切换选主，自愈。
+
+高容量：通过横向扩展，LinkedIn每日通过Kafka存储的新增数据高达175TB，8000亿条消息，可无限扩容，类似把两条磁带粘到一起。
+
+传统业务数据库的根本缺陷在于：
+1. 太慢，读写太昂贵，无法避免的随机寻址。（磁盘最快5ms寻址，固态又太昂贵。）
+2. 根本无法适应持续产生的数据流，越用越慢。（索引效率问题）
+3. 无法水平scale。（多半是读写分离，一主多备。另: NewSQL通过一致性算法，有多主。）
+
+针对这些问题，Kafka提出了一种方法: 
+
+“log-centric approach（以日志为中心的方法）。”
+
+将传统数据库分为两个独立的系统，即日志系统和索引系统。
+
+“持久化和索引分开，日志尽可能快的落地，索引按照自己的速度追赶。”
+
+在数据可靠性在得到Kafka这种快速的，类似磁带顺序记录方式保障的大前提下。数据的呈现，使用方式变得非常灵活，可以根据需要将数据流同时送入搜索系统，RDBMS系统，数据仓库系统， 图数据库系统，日志分析等这些各种不同的数据库系统。 这些不同的系统只不过是一种对Kafka磁带数据的一种诠释，一个侧面，一个索引，一个快照。数据丢了，没关系，重放一遍磁带即可，更多的时候，对这些各式数据库系统的维护只是需要定期做一个快照，并拷贝到一个安全的对象存储(如S3) 而已。 
+
+一句话：“日志都是相同的日志，索引各有各的不同。”
+
+以上故事说明了Kafka主要用途是数据集成，或者说是流数据集成，以Pub/Sub形式的消息总线形式提供。但是，Kafka不仅仅是一套传统的消息总线，本质上Kafka是分布式的流数据平台，因为以下特性而著名：
+
+提供Pub/Sub方式的海量消息处理。
+以高容错的方式存储海量数据流。
+保证数据流的顺序。
+4.Hadoop/Spark
+Hadoop -> HDFS分布式数据存储 + MapReduce
+	Hadoop解决了大数据（大到一台计算机无法进行存储，一台计算机无法在要求的时间内进行处理）的可靠存储和处理。
+		HDFS，在由普通PC组成的集群上提供高可靠的文件存储，通过将块保存多个副本的办法解决服务器或硬盘坏掉的问题。
+		MapReduce，通过简单的Mapper和Reducer的抽象提供一个编程模型，
+		Apache Pig解决了MapRedude存在的大量手写代码，语义隐藏，提供操作种类少的问题，类似的项目还有Cascading,JAQL等。
+Spark-大数据处理引擎，主要特点是提供了一个集群的分布式内存抽象。
+
+Spark没有文件管理系统，所以，它必须和其他的分布式文件系统进行集成才能运作。
+但Spark数据处理速度秒杀MapReduce。Spark的批处理速度比MapReduce快近10倍，内存中的数据分析速度则快近100倍。
+-> Spark处理+Hadoop的HDFS分布式数据存储
+what is MapReduce?
+我们要数图书馆中的所有书。你数1号书架，我数2号书架。这就是“Map”。我们人越多，数书就更快。
+现在我们到一起，把所有人的统计数加在一起。这就是“Reduce”。
+
+深入理解Hadoop集群
+http://os.51cto.com/art/201211/364374.htm
+
+5.Paul got promoted to be an assistant manager in 2017. He proved himself for the qualification with good work performance. Job well done and looking forward to seeing him more success in 2017. 
+
+20170712
+1.如何快速成为数据分析师
+https://www.zhihu.com/question/29265587
+
+20170717
+1. Spark实战
+http://www.cnblogs.com/shishanyuan/p/4699644.html
+	1.1 一个三个节点的集群
+	a.操作系统：CentOS6.5 64bit
+	b.Linux传输工具:SSH Secure File Transfer
+	c.Linux命令行执行工具：SSH Secure Shell, SecureCRT
+	2.配置运行环境
+	a. 更新OpenSSL #yum update openssl
+	b. 修改SSH配置文件
+	c. 增加 hadoop组和用户
+	d. JDK1.7 http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
+	打开界面之后，先选中 Accept License Agreement ，然后下载 jdk-7u55-linux-x64.tar.gz，如下图所示：
+	e. Scala安装包 Scala2.10.4安装包下载链接为：http://www.scala-lang.org/download/2.10.4.html
+	3.配置集群环境
+	4....
+2. 编译Hadoop
+	1.环境配置
+		1.maven http://mirror.bit.edu.cn/apache/maven/maven-3/
+		2.SVN #yum install svn
+		3.autoconf automake libtool cmake #yum install autoconf automake libtool cmake
+		4.ncurses-devel #yum install ncurses-devel
+		5.openssl-devel #yum install openssl-devel
+		6.gcc* #yum install gcc*
+		7.protobuf https://code.google.com/p/protobuf/downloads/list
+	2.编译Hadoop
+		1.Hadoop源码 Release2.2.0 $svn checkout http://svn.apache.org/repos/asf/hadoop/common/tags/release-2.2.0
+		2.编译Hadoop源码 $mvn package -Pdist,native -DskipTests –Dtar
+		3.验证编译是否成功
+	3.安装Hadoop
+		1.在主节点上压缩 
+		$cd /home/hadoop/upload/
+		$tar -xzf hadoop-2.2.0.tar.gz
+		2. 把hadoop-2.2.0目录移到/app/hadoop目录下
+2. Storm实时分布式系统
