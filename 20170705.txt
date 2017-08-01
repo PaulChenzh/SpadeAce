@@ -236,3 +236,62 @@ VPS可以将专有网络的私有IP地址范围分割成一个或多个虚拟交
 20170726
 1.在阿里云上配了一台1核2G的云服务器，9.5折约98每月
 远程连接密码：456139
+
+
+20170731
+1. Linux命令大全
+http://www.runoob.com/linux/linux-command-manual.html
+2. Linux 技巧：让进程在后台可靠运行的几种方法
+https://www.ibm.com/developerworks/cn/linux/l-cn-nohup/
+--------------------------------------------------------------------------
+1. Linux安装Hadoop
+1)Hadoop2.6.5版本
+http://apache.claz.org/hadoop/common/hadoop-2.6.5/hadoop-2.6.5-src.tar.gz 
+2)通过wget下载hadoop
+wget http://apache.claz.org/hadoop/common/hadoop-2.6.5/hadoop-2.6.5-src.tar.gz 
+*/root目录就是~目录
+3)解压缩hadoop
+tar -zxcf /root/hadoop-2.6.5-src.tar.gz
+2.安装JDK
+1)JDK1.8
+http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.tar.gz
+2)通过wget下载hadoop
+wget http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.tar.gz
+3)解压缩jdk
+tar -zxvf jdk-8u144-linux-x64.tar.gz
+	*Linux解压tar.gz文件时提示gzip：stdin：not错误
+	gzip： stdin： not in gzip format
+	tar： Child returned status 1
+	tar： Error is not recoverable： exiting now
+	第一个解决方案：http://alany.blog.51cto.com/6125308/1422299
+	-->均无效
+wget http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.rpm
+
+----------插播--------------
+重启服务器之后，执行：nginx -s reload
+报如下错：
+nginx: [error] open() "/run/nginx.pid" failed (2: No such file or directory)
+	*linux操作系统重启后 解决nginx的pid消失问题:http://www.cnblogs.com/cyq632694540/p/6483535.html
+找到nginx的启动程序/usr/sbin/nginx,nginx的配置文件/etc/nginx/nginx.conf,-c为以什么文件启动：
+/usr/sbin/nginx -c /etc/nginx/nginx.conf
+
+
+20170801
+1. 继续安装Hadoop
+
+2.启动部署
+1）格式化nameNode
+cd /app/hadoop/hadoop2.6.5/
+./bin/hdfs namenode -format
+2)启动HDFS
+*HDFS的运行原理：http://www.cnblogs.com/laov/p/3434917.html
+cd /app/hadoop/hadoop2.6.5/sbin
+./start-dfs.sh
+出现错误：Incorrect configuration: namenode address dfs.namenode.servicerpc-address or dfs.namenode.rpc-address is not configured.
+3)检验HDFS是否启动
+jps
+30654 Jps
+*Hadoop 新 MapReduce 框架 Yarn 详解：https://www.ibm.com/developerworks/cn/opensource/os-cn-hadoop-yarn/
+4）配置core-site.xml
+*Hadoop core-site.xml 配置项列表：http://www.cnblogs.com/yinchengzhe/p/5000217.html
+*《hadoop学习》关于hdfs中的core-site.xml,hdfs-site.xml,mapred-site.xml文件配置详解：http://www.cnblogs.com/forget-me-not/p/5710122.html
