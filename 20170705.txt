@@ -295,3 +295,31 @@ jps
 4）配置core-site.xml
 *Hadoop core-site.xml 配置项列表：http://www.cnblogs.com/yinchengzhe/p/5000217.html
 *《hadoop学习》关于hdfs中的core-site.xml,hdfs-site.xml,mapred-site.xml文件配置详解：http://www.cnblogs.com/forget-me-not/p/5710122.html
+
+
+
+
+*教你如何做游戏：https://github.com/miloyip/game-programmer
+
+
+20170802
+1. yarn是什么
+yarn-site.xml配置：http://www.cnblogs.com/captainlucky/p/4610295.html
+2.yarn-env.sh配置：
+yarn-env.sh在./etc/hadoop/目录下
+vi yarn-env.sh
+加入JAVA_HOME路径
+export JAVA_HOME=/root/tools/jdk1.7.0_79
+之后热加载该文件，使其生效：
+source yarn-env.sh
+3.董的博客：关注大数据处理http://dongxicheng.org/mapreduce-nextgen/hadoop-yarn-configurations-resourcemanager-nodemanager/
+4.hadoop三个配置文件core-site.xml、hdfs-site.xml和mapred-site.xml
+http://www.iyunv.com/thread-17698-1-1.html
+5.core-site.xml配置
+6.URI:统一资源标识符:https://www.zhihu.com/question/21950864
+7.windows下安装hadoop：http://www.cnblogs.com/kinglau/archive/2013/08/20/3270160.html
+8.写一篇Linux命令篇，一方面用于积累，一方面用于方便查询，一方面用于快速查询
+9.写一篇CentOS搭建个人站点时遇到的问题
+10.等CentOS搭建完Hadoop，写一篇有关公略+遇到的问题集合
+11.将windows的hadoop build起来
+12.将mac的hadoop build起来
