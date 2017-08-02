@@ -1,0 +1,333 @@
+参考：
+http://www.cnblogs.com/yanglf/p/4020555.html
+http://www.cnblogs.com/shishanyuan/p/4699644.html
+
+1.去官网下载jdk:http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+2.通过ftp将下载好的jdk*.tar.gz上传到服务器
+3.在服务器用tar -zxvf解压缩
+     版本：jdk1.8.0_144
+4.配置java环境变量
+vim /etc/environment
+
+JAVA_HOME=/root/tools/jdk1.8.0_144
+CLASSPATH=/root/tools/jdk1.8.0_144/lib:/root/tools/jdk1.8.0_144/jre/lib
+PATH=/root/tools/jdk1.8.0_144:/root/tools/jdk1.8.0_144/bin
+
+使配置生效：source /etc/environment
+检验是否配置成功：java -version
+*这人在配置完java的环境变量后,vim变成不能用的
+     这里需要export  PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+     并在/etc/enviroment里面加入 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+     现在的/etc/enviroment变成：
+     JAVA_HOME=/root/tools/jdk1.8.0_144
+     CLASSPATH=/root/tools/jdk1.8.0_144/lib:/root/tools/jdk1.8.0_144/jre/lib
+     PATH=/root/tools/jdk1.8.0_144:/root/tools/jdk1.8.0_144/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+5.配置Hadoop环境变量
+Vim /etc/enviroment
+将hadoop的路径加入path中：
+     :/root/tools/hadoop-2.6.5-src/sbin
+     现在的/etc/environment变成：
+     JAVA_HOME=/root/tools/jdk1.8.0_144
+     CLASSPATH=/root/tools/jdk1.8.0_144/lib:/root/tools/jdk1.8.0_144/jre/lib
+     PATH=/root/tools/jdk1.8.0_144:/root/tools/jdk1.8.0_144/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/tools/hadoop-2.6.5-src/sbin
+
+6.安装maven
+yum install maven
+7.编译Hadoop
+在解压缩好的hadoop根目录下执行：
+mvn package -Pdist,native -DskipTests -Dtar
+
+1）遇到错误：
+[INFO] Apache Hadoop Annotations ......................... FAILURE [47.125s]
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-javadoc-plugin:2.8.1:jar (module-javadocs) on project hadoop-annotations: MavenReportException: Error while creating archive:
+[ERROR] Exit code: 1 - /root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-annotations/src/main/java/org/apache/hadoop/classification/InterfaceStability.java:27: error: unexpected end tag: </ul>
+[ERROR] * </ul>
+说是Hadoop与jdk1.8兼容性问题，遂改为1.7试试
+**之后要记得将所有的用到的软件放一份在云盘并分享出来！
+2）换成Jdk1.7后，遇到第二个错误：
+[INFO] Apache Hadoop Common .............................. FAILURE [2:42.942s]
+[ERROR] Failed to execute goal org.apache.hadoop:hadoop-maven-plugins:2.6.5:protoc (compile-protoc) on project hadoop-common: org.apache.maven.plugin.MojoExecutionException: 'protoc --version' did not return a version -> [Help 1]
+原因：没有安装protoc
+*这里用yum install protobuf安装的protobuf是不能用的，有时间要去查为什么！
+安装protobuf:http://www.cnblogs.com/damonxu/p/6439215.html/http://blog.csdn.net/xiexievv/article/details/47396725
+去github上找到protobuf的项目：https://github.com/google/protobuf/releases?after=v3.0.0-alpha-4.1
+下载protobuf2.5.0:https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz
+将其放在/root/tools目录下，再进入protobuf根目录，依次执行：
+./configure
+此时会报错：
+configure: error: in `/root/tools/protobuf-2.5.0':
+configure: error: C++ preprocessor "/lib/cpp" fails sanity check
+See `config.log' for more details
+原因：c++相关的类库没有安装
+解决方案： yum install gcc-c++
+安装gcc-c++后，再次执行./configure，成功！
+接下来依次执行：
+make
+make check
+make install
+安装号之后，继续编译Hadoop：
+mvn package -Pdist,native -DskipTests -Dtar
+遇到第三个错误：
+[INFO] Apache Hadoop Common .............................. FAILURE [1:13.449s]
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-antrun-plugin:1.7:run (make) on project hadoop-common: An Ant BuildException has occured: Execute failed: java.io.IOException: Cannot run program "cmake" (in directory "/root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/target/native"): error=2, No such file or directory
+[ERROR] around Ant part ...<exec dir="/root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/target/native" executable="cmake" failonerror="true">... @ 4:132 in /root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/target/antrun/build-main.xml
+需安装：cmake：yum install cmake
+遇到第四个错误：
+[INFO] Apache Hadoop Common .............................. FAILURE [25.424s]
+[ERROR] Failed to execute goal org.apache.avro:avro-maven-plugin:1.7.4:schema (generate-avro-test-sources) on project hadoop-common: Execution generate-avro-test-sources of goal org.apache.avro:avro-maven-plugin:1.7.4:schema failed: Plugin org.apache.avro:avro-maven-plugin:1.7.4 or one of its dependencies could not be resolved: Failed to collect dependencies for org.apache.avro:avro-maven-plugin:jar:1.7.4 (): Failed to read artifact descriptor for org.apache.maven:maven-plugin-api:jar:2.0.10: Could not transfer artifact org.apache.maven:maven-plugin-api:pom:2.0.10 from/to central (https://repo.maven.apache.org/maven2): repo.maven.apache.org: Unknown host repo.maven.apache.org -> [Help 1]
+需安装autoconf automake libtool ：yum install autoconf automake libtool
+*这里需要了解一下为什么装了这三个就可以*
+继续安装之后，成功安完！
+[INFO] Executed tasks
+[INFO]
+[INFO] --- maven-javadoc-plugin:2.8.1:jar (module-javadocs) @ hadoop-dist ---
+[INFO] Building jar: /root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-dist-2.6.5-javadoc.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO]
+[INFO] Apache Hadoop Main ................................ SUCCESS [1.781s]
+[INFO] Apache Hadoop Build Tools ......................... SUCCESS [1.285s]
+[INFO] Apache Hadoop Project POM ......................... SUCCESS [1.992s]
+[INFO] Apache Hadoop Annotations ......................... SUCCESS [3.220s]
+[INFO] Apache Hadoop Assemblies .......................... SUCCESS [0.370s]
+[INFO] Apache Hadoop Project Dist POM .................... SUCCESS [1.744s]
+[INFO] Apache Hadoop Maven Plugins ....................... SUCCESS [4.227s]
+[INFO] Apache Hadoop MiniKDC ............................. SUCCESS [5.209s]
+[INFO] Apache Hadoop Auth ................................ SUCCESS [6.441s]
+[INFO] Apache Hadoop Auth Examples ....................... SUCCESS [3.171s]
+[INFO] Apache Hadoop Common .............................. SUCCESS [2:11.823s]
+[INFO] Apache Hadoop NFS ................................. SUCCESS [13.284s]
+[INFO] Apache Hadoop KMS ................................. SUCCESS [19:04.354s]
+[INFO] Apache Hadoop Common Project ...................... SUCCESS [0.033s]
+[INFO] Apache Hadoop HDFS ................................ SUCCESS [7:41.368s]
+[INFO] Apache Hadoop HttpFS .............................. SUCCESS [10:21.093s]
+[INFO] Apache Hadoop HDFS BookKeeper Journal ............. SUCCESS [2:27.817s]
+[INFO] Apache Hadoop HDFS-NFS ............................ SUCCESS [6.038s]
+[INFO] Apache Hadoop HDFS Project ........................ SUCCESS [0.026s]
+[INFO] hadoop-yarn ....................................... SUCCESS [0.025s]
+[INFO] hadoop-yarn-api ................................... SUCCESS [1:20.939s]
+[INFO] hadoop-yarn-common ................................ SUCCESS [1:28.580s]
+[INFO] hadoop-yarn-server ................................ SUCCESS [0.025s]
+[INFO] hadoop-yarn-server-common ......................... SUCCESS [1:15.755s]
+[INFO] hadoop-yarn-server-nodemanager .................... SUCCESS [1:40.390s]
+[INFO] hadoop-yarn-server-web-proxy ...................... SUCCESS [3.026s]
+[INFO] hadoop-yarn-server-applicationhistoryservice ...... SUCCESS [8.140s]
+[INFO] hadoop-yarn-server-resourcemanager ................ SUCCESS [20.263s]
+[INFO] hadoop-yarn-server-tests .......................... SUCCESS [6.546s]
+[INFO] hadoop-yarn-client ................................ SUCCESS [9.293s]
+[INFO] hadoop-yarn-applications .......................... SUCCESS [0.040s]
+[INFO] hadoop-yarn-applications-distributedshell ......... SUCCESS [2.716s]
+[INFO] hadoop-yarn-applications-unmanaged-am-launcher .... SUCCESS [2.083s]
+[INFO] hadoop-yarn-site .................................. SUCCESS [0.097s]
+[INFO] hadoop-yarn-registry .............................. SUCCESS [6.304s]
+[INFO] hadoop-yarn-project ............................... SUCCESS [3.334s]
+[INFO] hadoop-mapreduce-client ........................... SUCCESS [0.101s]
+[INFO] hadoop-mapreduce-client-core ...................... SUCCESS [24.995s]
+[INFO] hadoop-mapreduce-client-common .................... SUCCESS [19.367s]
+[INFO] hadoop-mapreduce-client-shuffle ................... SUCCESS [4.613s]
+[INFO] hadoop-mapreduce-client-app ....................... SUCCESS [11.879s]
+[INFO] hadoop-mapreduce-client-hs ........................ SUCCESS [9.634s]
+[INFO] hadoop-mapreduce-client-jobclient ................. SUCCESS [1:46.747s]
+[INFO] hadoop-mapreduce-client-hs-plugins ................ SUCCESS [2.123s]
+[INFO] Apache Hadoop MapReduce Examples .................. SUCCESS [7.112s]
+[INFO] hadoop-mapreduce .................................. SUCCESS [3.105s]
+[INFO] Apache Hadoop MapReduce Streaming ................. SUCCESS [15.736s]
+[INFO] Apache Hadoop Distributed Copy .................... SUCCESS [37.072s]
+[INFO] Apache Hadoop Archives ............................ SUCCESS [2.807s]
+[INFO] Apache Hadoop Rumen ............................... SUCCESS [6.807s]
+[INFO] Apache Hadoop Gridmix ............................. SUCCESS [5.745s]
+[INFO] Apache Hadoop Data Join ........................... SUCCESS [3.557s]
+[INFO] Apache Hadoop Ant Tasks ........................... SUCCESS [2.372s]
+[INFO] Apache Hadoop Extras .............................. SUCCESS [3.680s]
+[INFO] Apache Hadoop Pipes ............................... SUCCESS [6.171s]
+[INFO] Apache Hadoop OpenStack support ................... SUCCESS [6.084s]
+[INFO] Apache Hadoop Amazon Web Services support ......... SUCCESS [10:02.050s]
+[INFO] Apache Hadoop Client .............................. SUCCESS [6.255s]
+[INFO] Apache Hadoop Mini-Cluster ........................ SUCCESS [0.816s]
+[INFO] Apache Hadoop Scheduler Load Simulator ............ SUCCESS [9.037s]
+[INFO] Apache Hadoop Tools Dist .......................... SUCCESS [7.078s]
+[INFO] Apache Hadoop Tools ............................... SUCCESS [0.032s]
+[INFO] Apache Hadoop Distribution ........................ SUCCESS [43.131s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1:05:14.349s
+[INFO] Finished at: Mon Jul 31 22:54:19 CST 2017
+[INFO] Final Memory: 102M/444M
+[INFO] ------------------------------------------------------------------------
+
+验证编译是否成功：
+cd /root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/lib/native
+file ./libhadoop.so.1.0.0
+该文件为ELF 64-bit LSB则表示文件成功编译为64位：
+[root@iz8vb9ui340vee3i8eukdiz native]# file ./libhadoop.so.1.0.0
+./libhadoop.so.1.0.0: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=e61d564f773b9a1d5bcad3eb285654823c8d28ff, not stripped
+
+在hadoop-dist/target目录中已经打包好了hadoop-2.6.5.tar.gz，该文件为Hadoop2.X 64位安装包。
+
+
+8.安装Hadoop
+上一步编译好的hadoop2.6.5.tar.gz在/root/tools/hadoop-2.6.5-src/hadoop-dist/target下面，将其拷贝到/root/tools下面：
+cp hadoop-2.6.5.tar.gz /root/tools/
+进入到/root/tools下并进行解压缩：
+tar -zxvf hadoop-2.6.5.tar.gz
+将解压缩好的hadoop-2.6.5目录移动到/app/hadoop目录下
+mv hadoop-2.6.5 /app/hadoop/
+hadoop用户在/app/hadoop/hadoop-2.6.5目录下创建tmp、name和data目录：
+$cd /app/hadoop/hadoop-2.6.5/ 
+$mkdir tmp
+$mkdir name
+$mkdir data
+打开配置文件hadoop-env.sh:
+cd /app/hadoop/hadoop-2.6.5/etc/hadoop
+vim hadoop-env.sh
+加入配置内容，设置JAVA_HOME和PATH路径:
+export JAVA_HOME=$JAVA_HOME
+export PATH=$PATH:/app/hadoop/hadoop-2.6.5/bin
+设置完成后，编译并确认其生效：
+source hadoop-env.sh
+hadoop version
+出现一个问题：-bash: hadoop: command not found
+原因：/etc/profile里面没有进行hadoop的相关配置，对该文件进行修改并使其生效：
+vim /etc/profile
+source /etc/profile
+增加内容如下：
+#set Hadoop environment
+export HADOOP_HOME=/app/hadoop/hadoop-2.6.5
+export PATH=$PATH:$HADOOP_HOME/bin
+再次执行hadoop version：
+[root@iz8vb9ui340vee3i8eukdiz ~]# hadoop version
+Hadoop 2.6.5
+Subversion Unknown -r Unknown
+Compiled by root on 2017-07-31T13:49Z
+Compiled with protoc 2.5.0
+From source with checksum f05c9fa095a395faa9db9f7ba5d754
+This command was run using /app/hadoop/hadoop-2.6.5/share/hadoop/common/hadoop-common-2.6.5.jar
+
+
+*查看slaves:
+[root@hadoop1 sbin]# find / -name slaves
+/sys/devices/pci0000:00/0000:00:01.1/ata2/host1/target1:0:0/1:0:0:0/block/sr0/slaves
+/sys/devices/pci0000:00/0000:00:05.0/virtio2/block/vda/slaves
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/target/hadoop-yarn-project-2.6.5/etc/hadoop/slaves
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/conf/slaves
+/root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/etc/hadoop/slaves
+/usr/src/kernels/3.10.0-514.6.2.el7.x86_64/drivers/w1/slaves
+/app/hadoop/hadoop-2.6.5/etc/hadoop/slaves
+[root@hadoop1 sbin]# vi /root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/conf/slaves
+查看mapred-site.xml
+[root@hadoop1 sbin]# find / -name mapred-site.xml.template
+/root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/etc/hadoop/mapred-site.xml.template
+/root/tools/hadoop-2.6.5-src/hadoop-mapreduce-project/conf/mapred-site.xml.template
+/root/tools/hadoop-2.6.5-src/hadoop-mapreduce-project/target/hadoop-mapreduce-2.6.5/etc/hadoop/mapred-site.xml.template
+/app/hadoop/hadoop-2.6.5/etc/hadoop/mapred-site.xml.template
+[root@hadoop1 sbin]# find / -name hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/etc/hadoop/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/share/hadoop/hdfs/templates/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/test/resources/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs-httpfs/target/test-classes/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs/src/main/conf/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs/src/test/resources/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs/target/test-classes/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs/target/hadoop-hdfs-2.6.5/etc/hadoop/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs/target/hadoop-hdfs-2.6.5/share/hadoop/hdfs/templates/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/src/test/resources/hdfs-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/target/test-classes/hdfs-site.xml
+/app/hadoop/hadoop-2.6.5/etc/hadoop/hdfs-site.xml
+/app/hadoop/hadoop-2.6.5/share/hadoop/hdfs/templates/hdfs-site.xml
+[root@hadoop1 sbin]# find / -name core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/src/test/resources/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-client/target/test-classes/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-nodemanager/src/test/resources/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-nodemanager/target/test-classes/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-tests/src/test/resources/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-tests/target/test-classes/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/src/test/resources/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/target/test-classes/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/etc/hadoop/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/share/hadoop/common/templates/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs-nfs/src/test/resources/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-hdfs-project/hadoop-hdfs-nfs/target/test-classes/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/src/main/conf/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/src/test/resources/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/target/test-classes/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/target/hadoop-common-2.6.5/etc/hadoop/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-common-project/hadoop-common/target/hadoop-common-2.6.5/share/hadoop/common/templates/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-tools/hadoop-openstack/src/test/resources/core-site.xml
+/root/tools/hadoop-2.6.5-src/hadoop-tools/hadoop-openstack/target/test-classes/core-site.xml
+/app/hadoop/hadoop-2.6.5/etc/hadoop/core-site.xml
+/app/hadoop/hadoop-2.6.5/share/hadoop/common/templates/core-site.xml
+
+
+9）修改slaves文件
+cd /app/hadoop/hadoop-2.6.5/etc/hadoop/
+vi slaves
+加入：
+hadoop1
+hadoop2
+该文件配置HDFS的节点
+
+*[root@hadoop1 hadoop]# cd /app/hadoop/hadoop-2.6.5/sbin/
+[root@hadoop1 sbin]# ./start-dfs.sh
+Incorrect configuration: namenode address dfs.namenode.servicerpc-address or dfs.namenode.rpc-address is not configured.
+Starting namenodes on []
+The authenticity of host 'hadoop1 (172.26.40.192)' can't be established.
+ECDSA key fingerprint is bd:ce:3a:a7:07:6b:5a:d3:41:c0:17:47:64:0b:21:9a.
+Are you sure you want to continue connecting (yes/no)? yes
+hadoop1: Warning: Permanently added 'hadoop1,172.26.40.192' (ECDSA) to the list of known hosts.
+root@hadoop1's password: 
+hadoop1: starting namenode, logging to /app/hadoop/hadoop-2.6.5/logs/hadoop-root-namenode-hadoop1.out
+hadoop2: ssh: connect to host hadoop2 port 22: Connection timed out
+root@hadoop1's password: 
+hadoop1: starting datanode, logging to /app/hadoop/hadoop-2.6.5/logs/hadoop-root-datanode-hadoop1.out
+hadoop2: ssh: connect to host hadoop2 port 22: Connection timed out
+Starting secondary namenodes [0.0.0.0]
+root@0.0.0.0's password: 
+0.0.0.0: starting secondarynamenode, logging to /app/hadoop/hadoop-2.6.5/logs/hadoop-root-secondarynamenode-hadoop1.out
+Exception in thread "main" java.lang.IllegalArgumentException: Invalid URI for NameNode address (check fs.defaultFS): file:/// has no authority.
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.getAddress(NameNode.java:426)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.getAddress(NameNode.java:416)
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.getServiceAddress(NameNode.java:409)
+        at org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode.initialize(SecondaryNameNode.java:229)
+        at org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode.<init>(SecondaryNameNode.java:192)
+        at org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode.main(SecondaryNameNode.java:671)
+            (-x) unlimited
+
+*查看某个变量的值：echo $JAVA_HOME
+
+
+
+基础环境搭建
+1.修改机器名
+在linux下：
+查询机器名：hostname
+修改机器名：vi /etc/sysconfig/network
+    HOSTNAME=hadoop1
+    NETWORKING=yes
+    vi /etc/hosts
+    将私网ip对应的hostname改成hadoop1
+在CentOS下，永久修改主机名：hostnamectl --static set-hostname hadoop1
+
+2.修改网络配置
+ /etc/init.d/network restart
+
+*linux
+    重启：reboot -f
+
+
+
+$ ./configure
+$ ./configure
+$ make
+$ make check
+$ make in是ta
+$ ./configure
+$ make
+$ make check
+$ make install
+$ ./configure
+$ make
+$ make check
+$ make install
+
