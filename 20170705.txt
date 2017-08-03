@@ -323,3 +323,8 @@ http://www.iyunv.com/thread-17698-1-1.html
 10.等CentOS搭建完Hadoop，写一篇有关公略+遇到的问题集合
 11.将windows的hadoop build起来
 12.将mac的hadoop build起来
+
+20170803
+1. Linux远程登陆windows
+http://network.51cto.com/art/201505/475152.htm
+http://www.linuxidc.com/Linux/2015-05/116907.htm

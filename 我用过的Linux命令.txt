@@ -1,0 +1,29 @@
+Linux命令
+
+1.scp=secure copy
+在linux下用来进行远程拷贝文件的命令：http://www.cnblogs.com/wanqieddy/archive/2012/08/02/2619928.html
+
+拷贝文件夹
+scp -r /home/example root@47.92.136.123:/app/example
+
+设置scp的log
+alias scp='scp -v 2>>/var/log/scplog'
+alias scp='scp -v 2>/var/log/scplog'
+
+script -a /tmp/scp.log -q -c "scp -r /data/weblogic/autodeploy/App/back 10.0.3.66:/home/weblogic/App"
+/tmp/scp.log 文件就是你scp输出的日志! 
+
+2.修改用户密码
+password username
+
+3.export用来使一个变量变成环境变量:export path
+4.echo $PATH用来打印当前PATH变量的值
+
+5.source命令:http://www.cnblogs.com/pkufork/p/linux_source.html
+source filepath/ . filepath
+使当前shell读入路径为filepath的shell文件并依次执行文件中的所有语句，通常用于重新执行刚修改的初始化文件，使之立即生效，而不必注销并重新登录。
+
+6.如何通过linux ssh远程linux不用输入密码登陆
+http://jingyan.baidu.com/article/f3ad7d0fe7bd0d09c2345b75.html
+ssh免密码登陆
+http://chenlb.iteye.com/blog/211809
