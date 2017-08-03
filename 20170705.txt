@@ -328,3 +328,37 @@ http://www.iyunv.com/thread-17698-1-1.html
 1. Linux远程登陆windows
 http://network.51cto.com/art/201505/475152.htm
 http://www.linuxidc.com/Linux/2015-05/116907.htm
+	是不是可以下载安装bash命令？
+	*另一个方案，使用rdesktop: http://network.51cto.com/art/201505/475152.htm
+2. 配置一下hadoop1和hadoop2的机子，使内外网能在hadoop时互连
+http://flychao88.iteye.com/blog/1950081
+	并保持ssh连接不断：
+	http://tonychiu.blog.51cto.com/656605/522304/
+	http://www.cnblogs.com/aoyihuashao/p/3298950.html
+	长时间保持SSH连接：
+	http://blog.chinaunix.net/uid-8473611-id-3069386.html
+	解决方案：
+		vim /etc/ssh/sshd_config
+		添加配置如下：
+		TCPKeepAlive yes
+		ClientAliveInterval 360
+		ClientAliveCountMax 100
+		重启sshd服务，并察看sshd服务是否开启：
+		systemctl restart sshd.service
+		systemctl status sshd.service
+	
+3. 配置一下hadoop2使得hadoop1远程登陆hadoop2时不需要密码验证
+	详见Linux命令6
+	配置SSH免密码登陆
+4.Windows安装Hadoop
+http://www.cnblogs.com/kinglau/archive/2013/08/20/3270160.html
+	**有个有趣的标题：CentOS+MacOS+Ubuntu+Windows组成的Hadoop集群
+5.现在只需要把网络的问题弄好以后，就可以启动Hadoop了
+6.Spark编译安装
+1）安装git
+yum install git
+2）下载Spark源码
+http://spark.apache.org/downloads.html
+这里选择2.2.0版本，对应的hadoop版本为2.6:
+Direct Download: https://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.6.tgz 用wget很慢
+Choose Apache Mirror方式下载:https://www.apache.org/dyn/closer.lua/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.6.tgz 这个秒下

@@ -27,3 +27,16 @@ source filepath/ . filepath
 http://jingyan.baidu.com/article/f3ad7d0fe7bd0d09c2345b75.html
 ssh免密码登陆
 http://chenlb.iteye.com/blog/211809
+
+7.另一篇从外网连接内网：http://www.cnblogs.com/devymex/p/4156378.html
+ssh 
+-C:允许数据压缩
+-f:后台连接
+-N:不登陆主机，也不执行任何脚本
+
+8.云服务器 ECS CentOS 7 重启 sshd 服务
+察看sshd服务是否启动：systemctl start sshd.service
+重启sshd服务：systemctl restart sshd.service
+设置开机启动:systemctl enable sshd.service
+
+9.rm -f 强制删除，没有询问
