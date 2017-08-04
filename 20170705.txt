@@ -362,3 +362,28 @@ http://spark.apache.org/downloads.html
 这里选择2.2.0版本，对应的hadoop版本为2.6:
 Direct Download: https://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.6.tgz 用wget很慢
 Choose Apache Mirror方式下载:https://www.apache.org/dyn/closer.lua/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.6.tgz 这个秒下
+
+20170804
+1.hadoop集群部署
+http://www.cnblogs.com/ggjucheng/archive/2012/04/17/2454538.html
+hadoop安装：http://www.aboutyun.com/thread-7684-1-1.html
+http://www.voidcn.com/blog/u010794465/article/p-5753980.html
+一步步教你Hadoop多节点集群安装配置：
+http://www.linuxidc.com/Linux/2016-02/128149.htm
+在单机上增加slave节点：
+http://www.cnblogs.com/charlesblc/p/6030008.html
+Hadoop常见的45个问题解答：
+https://zhuanlan.zhihu.com/p/27157413
+
+2.网络连接模式
+http://lilinji.blog.51cto.com/5441000/1264307
+https://github.com/pzxwhc/MineKnowContainer/issues/52
+
+3.hadoop集群默认配置和常用配置
+http://itindex.net/detail/37404-hadoop-%E9%9B%86%E7%BE%A4
+
+4.NAT详解
+http://bbs.51cto.com/thread-878322-1.html
+
+5.设置NAT
+http://www.cnblogs.com/shangdawei/p/4538923.html
