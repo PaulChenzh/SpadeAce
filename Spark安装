@@ -1,0 +1,12 @@
+Spark编译安装
+http://www.cnblogs.com/shishanyuan/p/4701656.html
+1）安装git
+yum install git
+2）下载Spark源码
+http://spark.apache.org/downloads.html
+这里选择2.2.0版本，对应的hadoop版本为2.6:
+Direct Download: https://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.6.tgz 用wget很慢
+Choose Apache Mirror方式下载:https://www.apache.org/dyn/closer.lua/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.6.tgz 这个秒下
+3)编译hadoop
+进入hadoop所在的文件加：
+mvn -Pyarn -Phadoop-2.2 -Pspark-ganglia-lgpl -Pkinesis-asl -Phive -DskipTests clean package
